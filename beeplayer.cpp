@@ -318,12 +318,13 @@ void SwitchMusic(ma_decoder& decoder) {
 
 // User Input
 void ListenEvent(ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
+    std::cout << "Press e to Exit, p to Pause, n to next, u to Prev." << std::endl;
     while (true) {
         // 非阻塞检查用户输入
         if (IsInputAvailable()) {
             char key;
             std::cin >> key;
-            switch (key) {
+            switch (tolower(key)) {
                 case 'e': {
                     CleanRes(device, decoder);
                     exit(0);
