@@ -1,6 +1,6 @@
 # Beeplayer  
 
-*<h5 align="right">Thanks to music make the world so beautiful. : )</h5>*
+*<h5 align="right">Thanks to music that makes the world so beautiful. :)</h5>*
 
 <h3 align="center">A minimal cross-platform music player based on miniaudio and C++.</h3>
 
