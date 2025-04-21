@@ -47,7 +47,6 @@ void ListenEvent(ma_decoder& decoder, ma_device_config& deviceConfig, ma_device&
 std::vector<std::string> PathGenner(const std::string& root);
 void ProgressThread(ma_decoder* pDecoder);
 int CleanRes(ma_device& device, ma_decoder& decoder);
-void PlayDone(const auto CurrentTime, const auto TotalTime);
 
 // Global Setting
 int GlobalCounter = 0;
@@ -93,13 +92,13 @@ std::vector<std::string> PathGenner(const std::string& root) {
 }
 
 std::string NextFile() {
-    if (SongName.empty()) return *SongName.end();
+    if (GlobalCounter == (SongName.size()-1)) return rootPath + "/" + *SongName.end();
     GlobalCounter = (GlobalCounter + 1) % SongName.size();
     return rootPath + "/" + SongName[GlobalCounter];
 }
 
 std::string PreFile() {
-    if (SongName.empty()) return *SongName.begin();
+    if (GlobalCounter == 0) return rootPath + "/" + *SongName.begin();
     GlobalCounter = (GlobalCounter - 1 + SongName.size()) % SongName.size();
     return rootPath + "/" + SongName[GlobalCounter];
 }
@@ -297,9 +296,6 @@ void InitEngineWithoutDevice(const std::string& path, ma_decoder& decoder, ma_de
     // Rerun the double buffering progress
     bufferFillerThread = std::thread(BufferFiller, &decoder);
     ListenEvent(decoder, deviceConfig, device);
-}
-
-void PlayDone(const auto CurrentTime, const auto TotalTime) {
 }
 
 void SwitchMusic(ma_decoder& decoder) {

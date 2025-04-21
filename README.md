@@ -19,11 +19,11 @@
 - [ ] 优化逻辑，降低耦合
 - [ ] 在第一个正式版本实现隔离功能，分类编写 
 - [ ] 修复多线程的已知bug
-- [ ] 修复目录迭代器的已知bug
+- [x] 修复目录迭代器的已知bug
 - [ ] 音量控件
 - [ ] 加入UI
 
 
-- License:
+- License: [MIT No Attribution](LICENSE)  
  [miniaudio](https://miniaud.io/) provides us with two versions of the License, and I use MIT No Attribution.  
 For more information and the content of the License, refer to the LICENSE file.  
