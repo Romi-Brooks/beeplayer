@@ -1,3 +1,16 @@
+/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+ *
+ *  Beeplayer non-Release Version
+ *  A minimal cross-platform music player based on miniaudio and C++.
+ *
+ *  Thanks to David Reid provided us a such powerful and useful lib "miniaudio"
+ *
+ *  All of the code is not the final version now,
+ *  and it should be logically rewritten once I have implemented the basic functions.
+ *
+ *  Thanks to music make the world so beautiful. :)
+ */
+
 #include "miniaudio/miniaudio.h"
 #include <iostream>
 #include <filesystem>
@@ -9,17 +22,39 @@
 #include <cstring>
 namespace fs = std::filesystem;
 
+// All of This fucking code makes all the huge mess, what I wish I could quickly rewite it as a class file. :(
+
+
+// To provide the Listen Event can be Non-blocking.
+#ifdef _WIN32 // For windows platfrom Non-blocking input
+#include <conio.h>
+bool IsInputAvailable() {
+    return _kbhit() != 0;
+}
+#else
+#include <sys/select.h>
+bool IsInputAvailable() {
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(STDIN_FILENO, &fds);
+    timeval timeout = {0, 0};
+    return select(STDIN_FILENO + 1, &fds, NULL, NULL, &timeout) > 0;
+}
+#endif
+
 // Forward Functions
-void ListenEvent(ma_result& result, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device);
+void ListenEvent(ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device);
 std::vector<std::string> PathGenner(const std::string& root);
 void ProgressThread(ma_decoder* pDecoder);
 int CleanRes(ma_device& device, ma_decoder& decoder);
+void PlayDone(const auto CurrentTime, const auto TotalTime);
 
 // Global Setting
 int GlobalCounter = 0;
-std::string rootPath = "E:/Music/";
+std::string rootPath = "E:/Music";
 auto SongName = PathGenner(rootPath);
 std::atomic<ma_uint64> globalTotalFrames{0};
+
 
 // Pather
 std::vector<std::string> PathGenner(const std::string& root) {
@@ -58,11 +93,17 @@ std::vector<std::string> PathGenner(const std::string& root) {
 }
 
 std::string NextFile() {
-    return rootPath + "/" + SongName[++GlobalCounter];
+    if (SongName.empty()) return *SongName.end();
+    GlobalCounter = (GlobalCounter + 1) % SongName.size();
+    return rootPath + "/" + SongName[GlobalCounter];
 }
+
 std::string PreFile() {
-    return rootPath + "/" + SongName[--GlobalCounter];
+    if (SongName.empty()) return *SongName.begin();
+    GlobalCounter = (GlobalCounter - 1 + SongName.size()) % SongName.size();
+    return rootPath + "/" + SongName[GlobalCounter];
 }
+
 std::string PathInit() {
     return rootPath + "/" + SongName[GlobalCounter];
 }
@@ -137,7 +178,6 @@ void ProgressThread(ma_decoder* pDecoder) {
                       << std::setfill('0') << std::setw(2) << static_cast<int>(totalTime) / 60 << ":"
                       << std::setfill('0') << std::setw(2) << static_cast<int>(totalTime) % 60
                       << "  \r" << std::flush; // 仅刷新，不换行
-
         }
     }
 }
@@ -155,7 +195,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 
     // 计算可复制帧数
     const ma_uint64 availableFrames = currentBuf.totalFrames - consumedFrames;
-    const ma_uint64 framesToCopy = std::min((ma_uint64)frameCount, availableFrames);
+    const ma_uint64 framesToCopy = std::min(static_cast<ma_uint64>(frameCount), availableFrames);
 
     // 复制数据到输出缓冲区
     const size_t bytesToCopy = framesToCopy * ma_get_bytes_per_frame(pDevice->playback.format, pDevice->playback.channels);
@@ -179,13 +219,13 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
     // 填充剩余空间（如果有）
     if (framesToCopy < frameCount) {
         const size_t remainingBytes = (frameCount - framesToCopy) * ma_get_bytes_per_frame(pDevice->playback.format, pDevice->playback.channels);
-        memset((char*)pOutput + bytesToCopy, 0, remainingBytes);
+        memset(static_cast<char *>(pOutput) + bytesToCopy, 0, remainingBytes);
     }
 }
 
 // miniaudio Init Functions
-int InitDecoder(const std::string& path, ma_result& result, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
-    result = ma_decoder_init_file(path.c_str(), nullptr, &decoder);
+int InitDecoder(const std::string& path, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
+    ma_result result = ma_decoder_init_file(path.c_str(), nullptr, &decoder);
     if (result != MA_SUCCESS) {
         std::cout << "Error to loading the file:" << path << std::endl;
         return -2;
@@ -232,7 +272,7 @@ int PlayFile(ma_device& device, ma_decoder& decoder) {
 
 // Player Init Functions
 void InitEngine(const std::string& path, ma_result& result, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
-    InitDecoder(path, result, decoder, deviceConfig, device);
+    InitDecoder(path, decoder, deviceConfig, device);
     InitConfig(deviceConfig, decoder);
     InitDevice(decoder, deviceConfig, device);
     std::cout << "Now playing:" << FileName(SongName[GlobalCounter]) << std::endl;
@@ -244,11 +284,11 @@ void InitEngine(const std::string& path, ma_result& result, ma_decoder& decoder,
 
     // 启动进度线程
     std::thread(ProgressThread, &decoder).detach();
-    ListenEvent(result, decoder, deviceConfig, device);
+    ListenEvent(decoder, deviceConfig, device);
 }
 
-void InitEngineWithoutDevice(const std::string& path, ma_result& result, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
-    InitDecoder(path, result, decoder, deviceConfig, device);
+void InitEngineWithoutDevice(const std::string& path, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
+    InitDecoder(path, decoder, deviceConfig, device);
     InitConfig(deviceConfig, decoder);
 
     std::cout << "Now playing:" << FileName(SongName[GlobalCounter]) << std::endl;
@@ -256,7 +296,10 @@ void InitEngineWithoutDevice(const std::string& path, ma_result& result, ma_deco
 
     // Rerun the double buffering progress
     bufferFillerThread = std::thread(BufferFiller, &decoder);
-    ListenEvent(result, decoder, deviceConfig, device);
+    ListenEvent(decoder, deviceConfig, device);
+}
+
+void PlayDone(const auto CurrentTime, const auto TotalTime) {
 }
 
 void SwitchMusic(ma_decoder& decoder) {
@@ -278,16 +321,16 @@ void SwitchMusic(ma_decoder& decoder) {
 }
 
 // User Input
-void ListenEvent(ma_result& result, ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
-    char key;
+void ListenEvent(ma_decoder& decoder, ma_device_config& deviceConfig, ma_device& device) {
     while (true) {
-        std::cout << "Press e to Exit, P to Pause, N to next, U to Prev." << std::endl;
-        std::cin >> key;
-        {
+        // 非阻塞检查用户输入
+        if (IsInputAvailable()) {
+            char key;
+            std::cin >> key;
             switch (key) {
                 case 'e': {
                     CleanRes(device, decoder);
-                    exit(1);
+                    exit(0);
                 }
                 case 'p': {
                     if (ma_device_is_started(&device)) {
@@ -301,12 +344,12 @@ void ListenEvent(ma_result& result, ma_decoder& decoder, ma_device_config& devic
                 }
                 case 'n': {
                     SwitchMusic(decoder);
-                    InitEngineWithoutDevice(NextFile(), result, decoder, deviceConfig, device);
+                    InitEngineWithoutDevice(NextFile(), decoder, deviceConfig, device);
                     break;
                 }
                 case 'u': {
                     SwitchMusic(decoder);
-                    InitEngineWithoutDevice(PreFile(), result, decoder, deviceConfig, device);
+                    InitEngineWithoutDevice(PreFile(), decoder, deviceConfig, device);
                     break;
                 }
                 default: {
@@ -315,6 +358,20 @@ void ListenEvent(ma_result& result, ma_decoder& decoder, ma_device_config& devic
                 }
             }
         }
+
+        // PlayDone Switch
+        ma_uint64 current = globalFrameCount.load();
+        ma_uint64 total = globalTotalFrames.load();
+        if (total > 0 && current >= total) {
+            std::cout << "\nEnd of track, switching to next..." << std::endl;
+            SwitchMusic(decoder);
+            InitEngineWithoutDevice(NextFile(), decoder, deviceConfig, device);
+            // 重置计数器避免重复触发
+            current = 0;
+            total = globalTotalFrames.load();
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 

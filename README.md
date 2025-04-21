@@ -1,6 +1,8 @@
-# Beeplayer
+# Beeplayer  
 
-<h4 align="center">A minimal cross-platform music player based on miniaudio and C++.</h4>
+*<h5 align="right">Thanks to music make the world so beautiful. : )</h5>*
+
+<h3 align="center">A minimal cross-platform music player based on miniaudio and C++.</h3>
 
 > [!IMPORTANT]  
 > 在目前这个版本，Beeplayer并不能以默认方式运行(即为直接从命令行运行), 
@@ -11,8 +13,9 @@
 > The next version should include a custom search directory.
 
 - [ ] 用户目录接收
-- [ ] 自动下一首
+- [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
 - [ ] 修复wav/mp3文件相互切换会有高频噪声的bug
+- [ ] 修复在不同曲目下SampleRate不同而产生时间及音调出现问题的bug
 - [ ] 优化逻辑，降低耦合
 - [ ] 在第一个正式版本实现隔离功能，分类编写 
 - [ ] 修复多线程的已知bug
@@ -21,6 +24,6 @@
 - [ ] 加入UI
 
 
-- License:  
+- License:
  [miniaudio](https://miniaud.io/) provides us with two versions of the License, and I use MIT No Attribution.  
 For more information and the content of the License, refer to the LICENSE file.  
