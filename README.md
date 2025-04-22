@@ -1,6 +1,6 @@
 # Beeplayer  
 
-*<h5 align="right">Thanks to music that makes the world so beautiful. :)</h5>*
+*<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
 <h3 align="center">A minimal cross-platform music player based on miniaudio and C++.</h3>
 
@@ -22,8 +22,8 @@
 - [x] 修复目录迭代器的已知bug
 - [ ] 音量控件
 - [ ] 加入UI
-
+- [ ] 加入Log系统
 
 - License: [MIT No Attribution](LICENSE)  
  [miniaudio](https://miniaud.io/) provides us with two versions of the License, and I use MIT No Attribution.  
-For more information and the content of the License, refer to the LICENSE file.  
+For more information, refer to the LICENSE file.  
