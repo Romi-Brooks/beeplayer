@@ -5,4 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(beeplayer beeplayer.cpp
         miniaudio/miniaudio.c
-        miniaudio/miniaudio.c)
+        Engine/AudioDevice.cpp
+        Engine/AudioDevice.hpp
+        Engine/AudioDecoder.cpp
+        Engine/AudioDecoder.hpp)
