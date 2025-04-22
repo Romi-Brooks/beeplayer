@@ -1,12 +1,15 @@
-//
-// Created by Romi on 25-4-22.
-//
+/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+ *  File Name: AudioDecoder.hpp
+ *  Lib: Beeplayer Core engine Audio Decoder lib
+ *  Author: Romi Brooks
+ *  Date: 2025-04-22
+ *  Type: Core Engine
+ */
 
 #ifndef AUDIODECODER_HPP
 #define AUDIODECODER_HPP
 #include "../miniaudio/miniaudio.h"
 #include "string"
-#include <iostream>
 
 class AudioDecoder {
     private:
@@ -15,22 +18,10 @@ class AudioDecoder {
     public:
         AudioDecoder() : p_decoder{} {}
 
-        ma_decoder& GetDecoder(){
-            return this->p_decoder;
-        }
+        ma_decoder& GetDecoder();
 
-        void InitDecoder(const std::string& FilePath) {
-            ma_result result = ma_decoder_init_file(FilePath.c_str(), nullptr, &this->p_decoder);
-            if (result != MA_SUCCESS) {
-                std::cout << "Error to loading the file:" << FilePath << std::endl;
-            }
-            // std::cout << "Init Decoder Completed." << std::endl;
-        }
-
-
+        void InitDecoder(const std::string& FilePath);
 
 };
-
-
 
 #endif //AUDIODECODER_HPP
