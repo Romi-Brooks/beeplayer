@@ -395,28 +395,28 @@
 // }
 #include <iostream>
 
-#include "Engine/AudioDecoder.hpp"
-#include "Engine/AudioDevice.hpp"
+#include "Engine/Decoder.hpp"
+#include "Engine/Device.hpp"
 #include "Engine/Player.hpp"
 #include "miniaudio/miniaudio.h"
 
 int main() {
     AudioDecoder Decoder;
     AudioDevice& Device = AudioDevice::GetDeviceInstance();
-	Player AudioPlayer;
+	AudioPlayer Player;
 
 	// First: Init the Decoder From the file
     Decoder.InitDecoder("media/天都黑了 - 本兮.mp3");
 
-	AudioPlayer.SetName("天都黑了 - 本兮");
+	Player.SetName("天都黑了 - 本兮");
 
 	// Second: Init the Device to make sure there is a device to play the audio
-    Device.InitDeviceConfig(ma_standard_sample_rate_44100, ma_format_f32, &Player::StaticCallback, Decoder.GetDecoder());
+    Device.InitDeviceConfig(ma_standard_sample_rate_44100, ma_format_f32, &AudioPlayer::StaticCallback, Decoder.GetDecoder(),Player);
     Device.InitDevice(Decoder.GetDecoder());
 
 	// Third: Play the audio
-	std::cout << "Now Playing: " << AudioPlayer.GetName() << std::endl;
-	AudioPlayer.Play(Device.GetDevice(), Decoder.GetDecoder());
+	std::cout << "Now Playing: " << Player.GetName() << std::endl;
+	Player.Play(Device.GetDevice(), Decoder.GetDecoder());
 
     std::cin.get();
     return 0;

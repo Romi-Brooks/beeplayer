@@ -1,18 +1,19 @@
 /*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
- *  File Name: AudioDeice.cpp
+ *  File Name: Device.cpp
  *  Lib: Beeplayer Core engine Audio Device lib
  *  Author: Romi Brooks
  *  Date: 2025-04-22
  *  Type: Core Engine
  */
 
-#include "AudioDevice.hpp"
+#include "Device.hpp"
+#include "Player.hpp"
 
-ma_device& AudioDevice::GetDevice() {
+ma_device & AudioDevice::GetDevice() {
  return this->p_device;
 }
 
-void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format &Format, const ma_device_data_proc &Callback, ma_decoder &Decoder) {
+void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format &Format, const ma_device_data_proc &Callback, ma_decoder &Decoder, AudioPlayer& Player) {
     p_deviceConfig = ma_device_config_init(ma_device_type_playback);
     p_deviceConfig.playback.format   = Format;
     // Device channels equal 2, indicating stereo.
@@ -24,6 +25,10 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
     p_deviceConfig.sampleRate        = SampleRate;
     p_deviceConfig.dataCallback      = Callback;   // CallBack Function
     p_deviceConfig.pUserData         = &Decoder;   // Can be accessed from the device object (device.pUserData).
+
+	std::cout << "Device Config Initialized." << std::endl
+				<< "Format: " << Format << std::endl
+				<< "Sample Rate: " << SampleRate << std::endl;
 }
 
 void AudioDevice::InitDevice(ma_decoder &Decoder) {
@@ -31,4 +36,5 @@ void AudioDevice::InitDevice(ma_decoder &Decoder) {
         std::cout << "Error to init device." << std::endl;
         ma_decoder_uninit(&Decoder); // For Safety
     }
+	std::cout << "Device Initialized." << std::endl;
 }

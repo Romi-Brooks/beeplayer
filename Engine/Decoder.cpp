@@ -1,13 +1,13 @@
 /*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
- *  File Name: AudioDecoder.cpp
+ *  File Name: Decoder.cpp
  *  Lib: Beeplayer Core engine Audio Decoder lib
  *  Author: Romi Brooks
  *  Date: 2025-04-22
  *  Type: Core Engine
  */
 
-#include "AudioDecoder.hpp"
 #include <iostream>
+#include "Decoder.hpp"
 
 ma_decoder & AudioDecoder::GetDecoder() {
     return this->p_decoder;
