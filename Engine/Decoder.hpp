@@ -8,7 +8,9 @@
 
 #ifndef DECODER_HPP
 #define DECODER_HPP
+
 #include "../miniaudio/miniaudio.h"
+#include "Buffering.hpp"
 #include "string"
 
 class AudioDecoder {

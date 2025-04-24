@@ -8,8 +8,8 @@
 
 #ifndef AUDIODEVICE_HPP
 #define AUDIODEVICE_HPP
+
 #include "../miniaudio/miniaudio.h"
-#include "Player.hpp"
 
 class AudioDevice {
     public:
@@ -24,7 +24,7 @@ class AudioDevice {
 
     ma_device& GetDevice();
 
-    void InitDeviceConfig(const ma_uint32& SampleRate, const ma_format& Format,const ma_device_data_proc& Callback, ma_decoder& Decoder,AudioPlayer& Player);
+    void InitDeviceConfig(const ma_uint32& SampleRate, const ma_format& Format,const ma_device_data_proc& Callback, ma_decoder& Decoder, void* DoubleBuffering);
     void InitDevice(ma_decoder& Decoder);
 
 	private:

@@ -13,8 +13,8 @@ add_executable(beeplayer miniaudio/miniaudio.c
         Engine/Player.hpp
         Engine/Buffering.cpp
         Engine/Buffering.hpp
-        FileSystem/Path.cpp
-        FileSystem/Path.hpp
         Log/LogSystem.cpp
         Log/LogSystem.hpp
+        FileSystem/Path.cpp
+        FileSystem/Path.hpp
 )

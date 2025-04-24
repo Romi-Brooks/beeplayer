@@ -6,15 +6,17 @@
  *  Type: Core Engine
  */
 
+#include <iostream>
+
 #include "Device.hpp"
-#include "Player.hpp"
+#include "../Log/LogSystem.hpp"
 
 ma_device & AudioDevice::GetDevice() {
  return this->p_device;
 }
 
-void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format &Format, const ma_device_data_proc &Callback, ma_decoder &Decoder, AudioPlayer& Player) {
-    p_deviceConfig = ma_device_config_init(ma_device_type_playback);
+void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format &Format, const ma_device_data_proc &Callback, ma_decoder &Decoder, void* DoubleBuffering) {
+	p_deviceConfig = ma_device_config_init(ma_device_type_playback);
     p_deviceConfig.playback.format   = Format;
     // Device channels equal 2, indicating stereo.
     // Actually, No one can use this pieces of shit exec to listen 7.1 or something right..?
@@ -24,17 +26,15 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
     // This can cause problems. To solve this, pass the sample rate explicitly.
     p_deviceConfig.sampleRate        = SampleRate;
     p_deviceConfig.dataCallback      = Callback;   // CallBack Function
-    p_deviceConfig.pUserData         = &Decoder;   // Can be accessed from the device object (device.pUserData).
+    p_deviceConfig.pUserData         = DoubleBuffering;   // Can be accessed from the device object (device.pUserData).
 
-	std::cout << "Device Config Initialized." << std::endl
-				<< "Format: " << Format << std::endl
-				<< "Sample Rate: " << SampleRate << std::endl;
+	LOG_INFO("Device Config Initialized.");
 }
 
 void AudioDevice::InitDevice(ma_decoder &Decoder) {
     if (ma_device_init(nullptr, &this->p_deviceConfig, &p_device) != MA_SUCCESS) {
-        std::cout << "Error to init device." << std::endl;
+    	LOG_ERROR("Error to init the Device.");
         ma_decoder_uninit(&Decoder); // For Safety
     }
-	std::cout << "Device Initialized." << std::endl;
+	LOG_INFO("Device Initialized.");
 }

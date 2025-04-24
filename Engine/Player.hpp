@@ -8,10 +8,12 @@
 
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
-#include "../miniaudio/miniaudio.h"
 
-#include "Buffering.hpp"
 #include <string>
+
+#include "../miniaudio/miniaudio.h"
+#include "Buffering.hpp"
+
 
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the
 // Decoder and Device classes for unified management
@@ -24,8 +26,8 @@ class AudioPlayer {
 			delete p_audioBuffer;
 		}
 
-		static void StaticCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
-		void InstanceCallback(const ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
+		// static void StaticCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
+		// void InstanceCallback(const ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
 
 		void Play(ma_device& Device, ma_decoder& Decode);
 
