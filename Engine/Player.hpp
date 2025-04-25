@@ -36,6 +36,8 @@ class AudioPlayer {
 		void SetName(const std::string& name) { p_SongName = name; }
 		void SetVol(float vol) { p_volume = vol; }
 
+		void Exit(ma_device& device, ma_decoder& decoder);
+
 	private:
 		float p_volume;
 		std::string p_SongName;

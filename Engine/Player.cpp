@@ -129,10 +129,15 @@
 //     }
 // }
 
-void AudioPlayer::Play(ma_device &Device, ma_decoder &Decoder)  {
+void AudioPlayer::Play(ma_device &Device, ma_decoder &Decoder) {
 	if (ma_device_start(&Device) != MA_SUCCESS) {
 		LOG_ERROR("Error when play the file.");
 		ma_device_uninit(&Device);
 		ma_decoder_uninit(&Decoder);
 	}
+}
+
+void AudioPlayer::Exit(ma_device &device, ma_decoder &decoder) {
+	ma_device_uninit(&device);
+	ma_decoder_uninit(&decoder);
 }
