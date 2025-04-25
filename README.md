@@ -6,9 +6,10 @@
 
 > [!WARNING]  
 > 现在的代码库正在被类重新改写，
-> 我不打算开新的branch，所以把原来的代码注释掉，放在了src_beeplayer.cpp里，
+> 我不打算开新的branch，所以把原来的代码注释掉，放在了src_beeplayer.cpp里  
 > The current codebase is being rewritten using classes,   
-> I won’t create a new branch for this. So the original code is commented out and put in src_beeplayer.cpp.
+> I won’t create a new branch for this.  
+> So the original code is commented out and put in src_beeplayer.cpp.
 
 > [!IMPORTANT]  
 > 在目前这个版本，Beeplayer并不能以默认方式运行(即为直接从命令行运行), 
