@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Buffering.hpp
  *  Lib: Beeplayer Core engine Audio Buffer -> Double buffering lib
  *  Author: Romi Brooks
@@ -16,44 +16,39 @@
 #include "../miniaudio/miniaudio.h"
 
 class AudioBuffering {
-public:
-	struct Buffer {
-		std::vector<ma_uint8> s_data;    // 原始音频数据
-		ma_uint64 s_startFrame = 0;      // 缓冲区起始帧位置
-		ma_uint64 s_totalFrames = 0;     // 缓冲区总帧数
-		std::atomic<bool> s_ready{false};// 缓冲区就绪状态
-	};
+	public:
+		struct Buffer {
+			std::vector<ma_uint8> s_data;    // 原始音频数据
+			ma_uint64 s_startFrame = 0;      // 缓冲区起始帧位置
+			ma_uint64 s_totalFrames = 0;     // 缓冲区总帧数
+			std::atomic<bool> s_ready{false};// 缓冲区就绪状态
+		};
 
-    explicit AudioBuffering(ma_decoder *decoder);
+	    explicit AudioBuffering(ma_decoder *decoder);
 
-	void BufferFiller(ma_decoder* pDecoder);
+		void BufferFiller(ma_decoder* pDecoder);
 
-    ~AudioBuffering();
-	Buffer* GetBuffers() { return p_buffers; }
-	std::thread& GetBufferThread() { return p_bufferFillerThread; }
-	int GetActiveBuffer() const { return p_activeBuffer.load(); }
-	ma_uint64 GetGlobalFrameCount() const { return p_globalFrameCount.load(); }
-	ma_uint32 GetOutputSampleRate() const { return p_outputSampleRate; }
-	void ConsumeFrames(ma_uint64 frames) { p_globalFrameCount += frames; }
+	    ~AudioBuffering();
+		Buffer* GetBuffers() { return p_buffers; }
+		std::thread& GetBufferThread() { return p_bufferFillerThread; }
+		int GetActiveBuffer() const { return p_activeBuffer.load(); }
+		ma_uint64 GetGlobalFrameCount() const { return p_globalFrameCount.load(); }
+		ma_uint32 GetOutputSampleRate() const { return p_outputSampleRate; }
+		void ConsumeFrames(ma_uint64 frames) { p_globalFrameCount += frames; }
 
+		void SetGlobalFrameCount(ma_uint64 frames) { p_globalFrameCount.store(frames); }
+		void SetOutputSampleRate(ma_uint32 rate) { p_outputSampleRate = rate; }
 
-	void SetGlobalFrameCount(ma_uint64 frames) { p_globalFrameCount.store(frames); }
-	void SetOutputSampleRate(ma_uint32 rate) { p_outputSampleRate = rate; }
+		void SwitchBuffer();
+		void ResetBuffer();
 
-	// 切换缓冲区并重置消耗帧数
-	void SwitchBuffer();
-	void ResetBuffer();
-
-
-private:
-
-
-	Buffer p_buffers[2];            // 双缓冲数组
-	std::atomic<int> p_activeBuffer{0};  // 当前活动缓冲区索引
-	std::atomic<ma_uint64> p_globalFrameCount{0}; // 全局已播放帧数
-	ma_uint32 p_outputSampleRate = 0;    // 采样率（需初始化时获取）
-	std::thread p_bufferFillerThread;    // 缓冲填充线程
-	std::atomic<bool> p_keepFilling{true}; // 线程控制标志
+	private:
+		Buffer p_buffers[2];            // 双缓冲数组
+		std::atomic<int> p_activeBuffer{0};  // 当前活动缓冲区索引
+		std::atomic<ma_uint64> p_globalFrameCount{0}; // 全局已播放帧数
+		ma_uint32 p_outputSampleRate = 0;    // 采样率（需初始化时获取）
+		std::thread p_bufferFillerThread;    // 缓冲填充线程
+		std::atomic<bool> p_keepFilling{true}; // 线程控制标志
 };
 
 #endif //BUFFERING_HPP

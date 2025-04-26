@@ -1,8 +1,8 @@
 /*
- *  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+ *  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *
  *  Beeplayer non-Release Version
- *  A minimal cross-platform music player based on miniaudio and C++.
+ *  A lightweight and cross-platform music player based on miniaudio and C++.
  *
  *  Thanks to David Reid provided us a such powerful and useful lib "miniaudio"
  *

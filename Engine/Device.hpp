@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Device.hpp
  *  Lib: Beeplayer Core engine Audio Device lib
  *  Author: Romi Brooks
@@ -13,19 +13,20 @@
 
 class AudioDevice {
     public:
-    // Singleton Instance
-    static AudioDevice& GetDeviceInstance() {
-        static AudioDevice device;
-        return device;
-    }
-	// Makesure the class is a singleton
-	AudioDevice(const AudioDevice&) = delete;
-	void operator=(const AudioDevice&) = delete;
+	    // Singleton Instance
+	    static AudioDevice& GetDeviceInstance() {
+	        static AudioDevice device;
+	        return device;
+	    }
 
-    ma_device& GetDevice();
+		// Makesure the class is a singleton
+		AudioDevice(const AudioDevice&) = delete;
+		void operator=(const AudioDevice&) = delete;
 
-    void InitDeviceConfig(const ma_uint32& SampleRate, const ma_format& Format,const ma_device_data_proc& Callback, ma_decoder& Decoder, void* DoubleBuffering);
-    void InitDevice(ma_decoder& Decoder);
+	    ma_device& GetDevice();
+
+	    void InitDeviceConfig(const ma_uint32& SampleRate, const ma_format& Format,const ma_device_data_proc& Callback, ma_decoder& Decoder, void* DoubleBuffering);
+	    void InitDevice(ma_decoder& Decoder);
 
 	private:
         ma_device p_device;

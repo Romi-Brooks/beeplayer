@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Path.cpp
  *  Lib: Beeplayer Song List File System
  *  Author: Romi Brooks
@@ -7,8 +7,6 @@
  */
 #include <algorithm>
 #include <iostream>
-#include <string>
-#include <vector>
 
 #include "Path.hpp"
 #include "../Log/LogSystem.hpp"
@@ -81,6 +79,3 @@ void Path::Rescan() {
 	InitSongList();
 	p_current_index = 0;
 }
-
-
-

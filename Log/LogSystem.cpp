@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: LogSystem.cpp
  *  Lib: Beeplayer I/O Log System
  *  Author: Romi Brooks

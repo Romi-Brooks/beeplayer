@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Decoder.hpp
  *  Lib: Beeplayer Core engine Audio Decoder lib
  *  Author: Romi Brooks
@@ -9,9 +9,9 @@
 #ifndef DECODER_HPP
 #define DECODER_HPP
 
+#include <string>
+
 #include "../miniaudio/miniaudio.h"
-#include "Buffering.hpp"
-#include "string"
 
 class AudioDecoder {
     public:

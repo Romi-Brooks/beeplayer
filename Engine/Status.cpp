@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Status.cpp
  *  Lib: Beeplayer Core engine Progress Status
  *  Author: Romi Brooks

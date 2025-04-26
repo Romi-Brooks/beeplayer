@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Player.cpp
  *  Lib: Beeplayer Core engine Audio Player lib
  *  Author: Romi Brooks
@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <thread>
 
 #include "../miniaudio/miniaudio.h"
 #include "../Log/LogSystem.hpp"
@@ -14,8 +15,6 @@
 
 #include "Player.hpp"
 #include "Buffering.hpp"
-
-#include <thread>
 
 void AudioPlayer::Play(ma_device &Device, ma_decoder &Decoder, Status& Timer, AudioBuffering& Buffer) const {
 	if (ma_device_start(&Device) != MA_SUCCESS) {

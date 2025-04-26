@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Buffering.cpp
  *  Lib: Beeplayer Core engine Audio Buffer -> Double buffering lib
  *  Author: Romi Brooks
@@ -9,9 +9,6 @@
 #include <mutex>
 
 #include "Buffering.hpp"
-
-#include "../Log/LogSystem.hpp"
-
 
 AudioBuffering::AudioBuffering(ma_decoder *decoder) {
 	p_outputSampleRate = decoder->outputSampleRate;
@@ -24,7 +21,7 @@ AudioBuffering::~AudioBuffering() {
 		p_bufferFillerThread.join();
 	}
 }
-void AudioBuffering::SwitchBuffer() { p_activeBuffer.store((p_activeBuffer.load() + 1) % 2); }
+void AudioBuffering::SwitchBuffer() { p_activeBuffer.store((p_activeBuffer.load() + 1) % 2); } // 切换缓冲区
 
 void AudioBuffering::ResetBuffer() {
 	// 停止填充线程

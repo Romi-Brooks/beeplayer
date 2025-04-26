@@ -1,16 +1,15 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Path.hpp
  *  Lib: Beeplayer Song List File System
  *  Author: Romi Brooks
  *  Date: 2025-04-24
  *  Type: FileSystem
  */
+
 #ifndef PATH_HPP
 #define PATH_HPP
 
 #include <filesystem>
-#include <algorithm>
-#include <iostream>
 #include <string>
 #include <vector>
 

@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: LogSystem.hpp
  *  Lib: Beeplayer I/O Log System
  *  Author: Romi Brooks
@@ -8,6 +8,7 @@
 
 #ifndef LOG_HPP
 #define LOG_HPP
+
 #include <mutex>
 
 enum LogLevel {

@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Device.cpp
  *  Lib: Beeplayer Core engine Audio Device lib
  *  Author: Romi Brooks
@@ -12,7 +12,7 @@
 #include "../Log/LogSystem.hpp"
 
 ma_device & AudioDevice::GetDevice() {
- return this->p_device;
+	return this->p_device;
 }
 
 void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format &Format, const ma_device_data_proc &Callback, ma_decoder &Decoder, void* DoubleBuffering) {
@@ -22,7 +22,7 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
     // Actually, No one can use this pieces of shit exec to listen 7.1 or something right..?
     p_deviceConfig.playback.channels = 2;
     // Under normal conditions, the sample rate is 44.1 kHz or 48.0 kHz.
-    // But when tracks are switched, the sample rate may change.
+    // When tracks are switched, the sample rate may change.
     // This can cause problems. To solve this, pass the sample rate explicitly.
     p_deviceConfig.sampleRate        = SampleRate;
     p_deviceConfig.dataCallback      = Callback;   // CallBack Function

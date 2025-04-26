@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Player.hpp
  *  Lib: Beeplayer Core engine Audio Player lib
  *  Author: Romi Brooks
@@ -9,11 +9,11 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <string>
+// #include <string>
+
 #include "Status.hpp"
 #include "Decoder.hpp"
 #include "Device.hpp"
-
 #include "../FileSystem/Path.hpp"
 
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the

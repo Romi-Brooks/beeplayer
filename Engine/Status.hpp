@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Status.hpp
  *  Lib: Beeplayer Core engine Progress Status
  *  Author: Romi Brooks
@@ -10,7 +10,6 @@
 #define STATUS_HPP
 
 #include "../miniaudio/miniaudio.h"
-#include "../Log/LogSystem.hpp"
 #include "Buffering.hpp"
 #include "Decoder.hpp"
 
@@ -23,6 +22,7 @@ public:
 	void SetFileLength(AudioDecoder& Decoder);
 	ma_uint64 GetTotalFrames() const  { return p_fileTotalFrames; }
 	void ResetStatus();
+
 private:
 	std::atomic<ma_uint64> p_fileTotalFrames{0};
 };

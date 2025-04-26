@@ -3,8 +3,7 @@ project(beeplayer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(beeplayer miniaudio/miniaudio.c
-        beeplayer.cpp
+add_executable(beeplayer miniaudio/miniaudio.c beeplayer.cpp
         Engine/Device.cpp
         Engine/Device.hpp
         Engine/Decoder.cpp
@@ -13,10 +12,10 @@ add_executable(beeplayer miniaudio/miniaudio.c
         Engine/Player.hpp
         Engine/Buffering.cpp
         Engine/Buffering.hpp
+        Engine/Status.cpp
+        Engine/Status.hpp
         Log/LogSystem.cpp
         Log/LogSystem.hpp
         FileSystem/Path.cpp
         FileSystem/Path.hpp
-        Engine/Status.cpp
-        Engine/Status.hpp
 )

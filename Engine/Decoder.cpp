@@ -1,4 +1,4 @@
-/*  Copyright (c) 2025 Romi Brooks <romi@heyromi.tech>
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Decoder.cpp
  *  Lib: Beeplayer Core engine Audio Decoder lib
  *  Author: Romi Brooks
@@ -6,7 +6,7 @@
  *  Type: Core Engine
  */
 
-#include <iostream>
+// #include <iostream>
 
 #include "Decoder.hpp"
 #include "../Log/LogSystem.hpp"
