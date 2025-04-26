@@ -2,7 +2,8 @@
 
 *<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
-<h3 align="center">A minimal cross-platform music player based on miniaudio and C++.</h3>
+<h3 align="center">A minimal cross-platform music player based on miniaudio and C++.</h3>  
+
 > [!IMPORTANT]  
 > Beeplayer 预构建版本发布啦！  
 > 在PreBuild目录下，你可以找到编译好的可执行文件。  
