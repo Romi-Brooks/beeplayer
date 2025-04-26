@@ -78,7 +78,7 @@ bool IsInputAvailable() {
     return select(STDIN_FILENO + 1, &fds, NULL, NULL, &timeout) > 0;
 }
 #endif
-void ListenEvent(AudioPlayer& Player, AudioDevice& Device, AudioDecoder& Decoder) {
+void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDecoder& Decoder, AudioBuffering& Buffer) {
     std::cout << "Press e to Exit, p to Pause, n to next, u to Prev." << std::endl;
     while (true) {
         // 非阻塞检查用户输入
@@ -101,13 +101,15 @@ void ListenEvent(AudioPlayer& Player, AudioDevice& Device, AudioDecoder& Decoder
                     break;
                 }
                 case 'n': {
-                    // SwitchMusic(Decoder.GetDecoder());
-                    // InitEngineWithoutDevice(NextFile(), decoder, deviceConfig, device);
+                    Player.Switch(Pather, Decoder, Device, data_callback, Buffer, SwitchAction::NEXT);
+                	LOG_INFO("Start Buffering thread.");
+                	ListenEvent(Pather, Player, Device, Decoder, Buffer);
                     break;
                 }
                 case 'u': {
-                    // SwitchMusic(decoder);
-                    // InitEngineWithoutDevice(PreFile(), decoder, deviceConfig, device);
+                	Player.Switch(Pather, Decoder, Device, data_callback, Buffer, SwitchAction::PREV);
+                	LOG_INFO("Start Buffering thread.");
+                	ListenEvent(Pather, Player, Device, Decoder, Buffer);
                     break;
                 }
                 default: {
@@ -125,27 +127,12 @@ int main() {
 	AudioDevice& Device = AudioDevice::GetDeviceInstance();
 	AudioPlayer Player;
 
-	// First: Init the Decoder From the file
-	Decoder.InitDecoder(Pather.CurrentFilePath());
-	Player.SetName(Path::GetFileName(Pather.CurrentFilePath()));
-
-	// ma_uint64 TotalFrames = 0;
-	// ma_data_source_get_length_in_pcm_frames(&Decoder.GetDecoder(), &TotalFrames);
-
+	Player.InitDecoder(Pather, Decoder); // 总是在主函数中先调用，才能够给双缓冲实例使用
 	AudioBuffering DoubleBuffering(&Decoder.GetDecoder());	// 创建双缓冲实例并关联到设备
+	Player.InitDevice(Decoder, Device, data_callback, DoubleBuffering); // 确保双缓冲被正确初始化，才能给到回调函数来获取信息
+	Player.Play(Device.GetDevice(), Decoder.GetDecoder()); // init后，显式的一次调用
 
-	// Second: Init the Device to make sure there is a device to play the audio
-	Device.InitDeviceConfig(ma_standard_sample_rate_44100, ma_format_f32, data_callback, Decoder.GetDecoder(),&DoubleBuffering);
-	Device.InitDevice(Decoder.GetDecoder());
-
-
-
-	// Third: Play the audio
-	LOG_INFO("Now Playing: " + Player.GetName());
-
-	Player.Play(Device.GetDevice(), Decoder.GetDecoder());
-
-	ListenEvent(Player, Device, Decoder);
+	ListenEvent(Pather, Player, Device, Decoder, DoubleBuffering);
 
 	std::cin.get();
 	return 0;

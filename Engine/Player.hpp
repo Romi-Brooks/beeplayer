@@ -11,13 +11,16 @@
 
 #include <string>
 
-#include "../miniaudio/miniaudio.h"
-#include "Buffering.hpp"
-
+#include "../FileSystem/Path.hpp"
+#include "Decoder.hpp"
+#include "Device.hpp"
 
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the
 // Decoder and Device classes for unified management
 // and provides essential player functionalities.
+enum SwitchAction {
+	NEXT, PREV
+};
 
 class AudioPlayer {
 	public:
@@ -36,6 +39,9 @@ class AudioPlayer {
 		void SetName(const std::string& name) { p_SongName = name; }
 		void SetVol(float vol) { p_volume = vol; }
 
+		void InitDecoder(Path &Pather, AudioDecoder &Decoder);
+		void InitDevice(AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, AudioBuffering &Buffer);
+		void Switch(Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, AudioBuffering& Buffer, SwitchAction SwitchCode);
 		void Exit(ma_device& device, ma_decoder& decoder);
 
 	private:

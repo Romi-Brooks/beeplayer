@@ -8,9 +8,13 @@
 
 #include <iostream>
 
+#include "../miniaudio/miniaudio.h"
+
+#include "Buffering.hpp"
 #include "Player.hpp"
 
 #include "../Log/LogSystem.hpp"
+#include "../FileSystem/Path.hpp"
 
 // void AudioPlayer::StaticCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
 // 	// 从用户数据获取Player实例
@@ -131,10 +135,65 @@
 
 void AudioPlayer::Play(ma_device &Device, ma_decoder &Decoder) {
 	if (ma_device_start(&Device) != MA_SUCCESS) {
-		LOG_ERROR("Error when play the file.");
+		LOG_ERROR("miniaudio -> Error when play the file.");
 		ma_device_uninit(&Device);
 		ma_decoder_uninit(&Decoder);
 	}
+	LOG_INFO("Audio Player-> Now Playing: " + this->GetName());
+}
+
+void AudioPlayer::InitDecoder(Path& Pather, AudioDecoder& Decoder) {
+	// 总是在主函数中首先调用
+	Decoder.InitDecoder(Pather.CurrentFilePath());
+	SetName(Path::GetFileName(Pather.CurrentFilePath()));
+}
+
+void AudioPlayer::InitDevice(AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, AudioBuffering &Buffer) {
+	Device.InitDeviceConfig(ma_standard_sample_rate_44100, ma_format_f32, Callback, Decoder.GetDecoder(), &Buffer);
+	Device.InitDevice(Decoder.GetDecoder());
+}
+
+void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Device, const ma_device_data_proc &Callback, AudioBuffering &Buffer, SwitchAction SwitchCode) {
+	switch (SwitchCode) {
+		// Set To the next file.
+		case SwitchAction::NEXT: {
+			LOG_INFO("Audio Player-> Switch Next!");
+			Pather.NextFilePath();
+			SetName(Pather.GetFileName(Pather.CurrentFilePath()));
+			break;
+		}
+		// Set To the previous file.
+		case SwitchAction::PREV: {
+			LOG_INFO("Audio Player-> Switch Pre!");
+			Pather.PrevFilePath();
+			SetName(Pather.GetFileName(Pather.CurrentFilePath()));
+			break;
+		}
+		default: { break; } // No matter what, code should be 0-1
+	}
+
+	ma_device_uninit(&Device.GetDevice());
+	ma_decoder_uninit(&Decoder.GetDecoder());
+	// ZERO: Make sure the buffer thread is stopped.
+	Buffer.ResetBuffer();
+
+	// First: Init the Decoder From the file
+	Decoder.InitDecoder(Pather.CurrentFilePath());
+	LOG_INFO("Audio Player-> Device init completed.");
+
+	// Second: Init the Device to make sure there is a device to play the audio
+	Device.InitDeviceConfig(Decoder.GetDecoder().outputSampleRate, Decoder.GetDecoder().outputFormat, Callback, Decoder.GetDecoder(), &Buffer);
+	Device.InitDevice(Decoder.GetDecoder());
+	LOG_INFO("Audio Player-> Device init completed.");
+
+	// Third: Just Playing the file from decoder and device
+	Play(Device.GetDevice(), Decoder.GetDecoder());
+	LOG_INFO("Audio Player -> Start Playing.");
+
+	// Rerun the double buffering progress
+	Buffer.GetBufferThread() = std::thread(&AudioBuffering::BufferFiller, &Buffer, &Decoder.GetDecoder());
+	LOG_INFO("Audio Player -> Rerun the double buffering progress.");
+	// ListenEvent(decoder, deviceConfig, device); // No hpp file include
 }
 
 void AudioPlayer::Exit(ma_device &device, ma_decoder &decoder) {

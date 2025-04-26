@@ -28,13 +28,13 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
     p_deviceConfig.dataCallback      = Callback;   // CallBack Function
     p_deviceConfig.pUserData         = DoubleBuffering;   // Can be accessed from the device object (device.pUserData).
 
-	LOG_INFO("Device Config Initialized.");
+	LOG_INFO("Audio Device -> Device Config Initialized.");
 }
 
 void AudioDevice::InitDevice(ma_decoder &Decoder) {
     if (ma_device_init(nullptr, &this->p_deviceConfig, &p_device) != MA_SUCCESS) {
-    	LOG_ERROR("Error to init the Device.");
+    	LOG_ERROR("miniaudio -> Error to init the Device.");
         ma_decoder_uninit(&Decoder); // For Safety
     }
-	LOG_INFO("Device Initialized.");
+	LOG_INFO("Audio Device -> Device Initialized.");
 }

@@ -11,14 +11,14 @@
 #include "Decoder.hpp"
 #include "../Log/LogSystem.hpp"
 
-ma_decoder & AudioDecoder::GetDecoder() {
+ma_decoder& AudioDecoder::GetDecoder() {
     return this->p_decoder;
 }
 
 void AudioDecoder::InitDecoder(const std::string &FilePath) {
 	ma_result result = ma_decoder_init_file(FilePath.c_str(), nullptr, &this->p_decoder);
 	if (result != MA_SUCCESS) {
-		LOG_ERROR("Error to loading the file:"  + FilePath);
+		LOG_ERROR("miniaudo -> Error to loading the file:"  + FilePath);
 	}
-	LOG_INFO("Init Decoder Completed.");
+	LOG_INFO("Audio Decoder -> Init Decoder Completed.");
 }

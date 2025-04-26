@@ -10,6 +10,8 @@
 
 #include "Buffering.hpp"
 
+#include "../Log/LogSystem.hpp"
+
 
 AudioBuffering::AudioBuffering(ma_decoder *decoder) {
 	p_outputSampleRate = decoder->outputSampleRate;
@@ -23,6 +25,24 @@ AudioBuffering::~AudioBuffering() {
 	}
 }
 void AudioBuffering::SwitchBuffer() { p_activeBuffer.store((p_activeBuffer.load() + 1) % 2); }
+
+void AudioBuffering::ResetBuffer() {
+	// 停止填充线程
+	p_keepFilling = false;
+	if (p_bufferFillerThread.joinable()) {
+		p_bufferFillerThread.join();
+	}
+
+	// 重置播放计数器
+	p_globalFrameCount.store(0);
+	p_keepFilling = true;
+
+	// 重置缓冲状态
+	p_buffers[0].s_ready = false;
+	p_buffers[1].s_ready = false;
+	p_activeBuffer = 0;
+	p_globalFrameCount = 0;
+}
 
 void AudioBuffering::BufferFiller(ma_decoder *pDecoder) {
 	int nextBuffer = 0;

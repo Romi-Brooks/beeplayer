@@ -26,8 +26,11 @@ public:
 
     explicit AudioBuffering(ma_decoder *decoder);
 
+	void BufferFiller(ma_decoder* pDecoder);
+
     ~AudioBuffering();
 	Buffer* GetBuffers() { return p_buffers; }
+	std::thread& GetBufferThread() { return p_bufferFillerThread; }
 	int GetActiveBuffer() const { return p_activeBuffer.load(); }
 	ma_uint64 GetGlobalFrameCount() const { return p_globalFrameCount.load(); }
 	ma_uint32 GetOutputSampleRate() const { return p_outputSampleRate; }
@@ -39,10 +42,11 @@ public:
 
 	// 切换缓冲区并重置消耗帧数
 	void SwitchBuffer();
+	void ResetBuffer();
 
 
 private:
-	void BufferFiller(ma_decoder* pDecoder);
+
 
 	Buffer p_buffers[2];            // 双缓冲数组
 	std::atomic<int> p_activeBuffer{0};  // 当前活动缓冲区索引
