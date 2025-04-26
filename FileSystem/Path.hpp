@@ -9,6 +9,10 @@
 #define PATH_HPP
 
 #include <filesystem>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace fs = std::filesystem;
 

@@ -17,4 +17,6 @@ add_executable(beeplayer miniaudio/miniaudio.c
         Log/LogSystem.hpp
         FileSystem/Path.cpp
         FileSystem/Path.hpp
+        Engine/Status.cpp
+        Engine/Status.hpp
 )

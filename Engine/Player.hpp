@@ -10,10 +10,11 @@
 #define PLAYER_HPP
 
 #include <string>
-
-#include "../FileSystem/Path.hpp"
+#include "Status.hpp"
 #include "Decoder.hpp"
 #include "Device.hpp"
+
+#include "../FileSystem/Path.hpp"
 
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the
 // Decoder and Device classes for unified management
@@ -32,7 +33,7 @@ class AudioPlayer {
 		// static void StaticCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
 		// void InstanceCallback(const ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
 
-		void Play(ma_device& Device, ma_decoder& Decode);
+		void Play(ma_device &Device, ma_decoder &Decoder, Status& Timer, AudioBuffering& Buffer) const;
 
 		std::string GetName() const { return p_SongName; }
 		float GetVol() const { return p_volume; }
@@ -41,7 +42,9 @@ class AudioPlayer {
 
 		void InitDecoder(Path &Pather, AudioDecoder &Decoder);
 		void InitDevice(AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, AudioBuffering &Buffer);
-		void Switch(Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, AudioBuffering& Buffer, SwitchAction SwitchCode);
+		void Switch(Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, Status& Timer, AudioBuffering& Buffer, SwitchAction SwitchCode);
+		void NextFileCheck(AudioBuffering& Buffer, Status& Timer, Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback);
+		void Clean(AudioBuffering& Buffer, Status& Timer, AudioDecoder& Decoder, AudioDevice& Device);
 		void Exit(ma_device& device, ma_decoder& decoder);
 
 	private:

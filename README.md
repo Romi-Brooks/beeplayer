@@ -3,6 +3,14 @@
 *<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
 <h3 align="center">A minimal cross-platform music player based on miniaudio and C++.</h3>
+> [!IMPORTANT]  
+> Beeplayer 预构建版本发布啦！  
+> 在PreBuild目录下，你可以找到编译好的可执行文件。  
+> 不过这只是一个预先构建版本，你需要去仔细阅读文件夹中的README文档。  
+> Beeplayer Prebuilt Version is Out!  
+> In the PreBuild directory, you can find the compiled executable files.  
+> However, this is just a prebuilt version, and you need to carefully read the README in the folder.  
+
 
 > [!WARNING]  
 > 现在的代码库正在被类重新改写，
@@ -11,18 +19,10 @@
 > I won’t create a new branch for this.  
 > So the original code is commented out and put in src_beeplayer.cpp.
 
-> [!IMPORTANT]  
-> 在目前这个版本，Beeplayer并不能以默认方式运行(即为直接从命令行运行), 
-> 不过可以通过修改源代码中的rootPath来正常播放,
-> 在下一个版本应该加入自定义检索目录。  
-> In this current version,Beeplayer cannot operate as expected by default from the command line.  
-> However,normal playback can be achieved by modifying the rootPath in the source code.  
-> The next version should include a custom search directory.
-
-
-- [ ] 用户目录接收
+- [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
-- [ ] 修复wav/mp3文件相互切换会有高频噪声的bug
+- [x] 修复wav/mp3文件相互切换会有高频噪声的bug
+- [ ] 修复在文件格式不同的情况下**貌似**会出现双缓冲卡顿
 - [ ] 修复在不同曲目下SampleRate不同而产生时间及音调出现问题的bug
 - [ ] 优化逻辑，降低耦合
 - [ ] 在第一个正式版本实现隔离功能，分类编写

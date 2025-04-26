@@ -22,7 +22,7 @@
 #include "Engine/Player.hpp"
 #include "Log/LogSystem.hpp"
 #include "FileSystem/Path.hpp"
-
+#include "Engine/Status.hpp"
 
 
 // 修改后的回调函数
@@ -78,9 +78,10 @@ bool IsInputAvailable() {
     return select(STDIN_FILENO + 1, &fds, NULL, NULL, &timeout) > 0;
 }
 #endif
-void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDecoder& Decoder, AudioBuffering& Buffer) {
+void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDecoder& Decoder, Status& Timer, AudioBuffering& Buffer) {
     std::cout << "Press e to Exit, p to Pause, n to next, u to Prev." << std::endl;
     while (true) {
+    	Player.NextFileCheck(Buffer, Timer, Pather, Decoder, Device, data_callback); // Check if the current song is over
         // 非阻塞检查用户输入
         if (IsInputAvailable()) {
             char key;
@@ -101,38 +102,66 @@ void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDe
                     break;
                 }
                 case 'n': {
-                    Player.Switch(Pather, Decoder, Device, data_callback, Buffer, SwitchAction::NEXT);
-                	LOG_INFO("Start Buffering thread.");
-                	ListenEvent(Pather, Player, Device, Decoder, Buffer);
+                    Player.Switch(Pather, Decoder, Device, data_callback, Timer, Buffer, SwitchAction::NEXT);
+                	LOG_INFO("Next Song!");
+                	ListenEvent(Pather, Player, Device, Decoder, Timer, Buffer);
                     break;
                 }
                 case 'u': {
-                	Player.Switch(Pather, Decoder, Device, data_callback, Buffer, SwitchAction::PREV);
-                	LOG_INFO("Start Buffering thread.");
-                	ListenEvent(Pather, Player, Device, Decoder, Buffer);
+                	Player.Switch(Pather, Decoder, Device, data_callback, Timer, Buffer, SwitchAction::PREV);
+                	LOG_INFO("Prev Song!");
+                	ListenEvent(Pather, Player, Device, Decoder, Timer, Buffer);
                     break;
                 }
                 default: {
-                    std::cout << "Unknown Command." << std::endl;
+                	LOG_WARNING("Unknown Command.");
                     break;
                 }
             }
         }
+
     }
 }
 
-int main() {
-	Path Pather("E:/Music");
+int main(int argc, char** argv) {
+	std::string rootPath;
+	if (argc == 3) {
+		if (std::string(argv[1]) == "-root") {
+			rootPath = argv[2];
+		} else {
+			LOG_WARNING("Using: -root \"Path/to/music\" to set the root path.");
+			return 1;
+		}
+	} else {
+		// 交互式获取路径
+		std::cout << "Input the root path: ";
+		std::getline(std::cin, rootPath);
+
+		// 确保输入非空
+		while (rootPath.empty()) {
+			LOG_WARNING("The root path can not be empty.");
+			std::cout << "Input the root path: ";
+			std::getline(std::cin, rootPath);
+		}
+	}
+
+	// 创建Path对象
+	Path Pather(rootPath);
+
+
 	AudioDecoder Decoder;
 	AudioDevice& Device = AudioDevice::GetDeviceInstance();
 	AudioPlayer Player;
 
 	Player.InitDecoder(Pather, Decoder); // 总是在主函数中先调用，才能够给双缓冲实例使用
 	AudioBuffering DoubleBuffering(&Decoder.GetDecoder());	// 创建双缓冲实例并关联到设备
-	Player.InitDevice(Decoder, Device, data_callback, DoubleBuffering); // 确保双缓冲被正确初始化，才能给到回调函数来获取信息
-	Player.Play(Device.GetDevice(), Decoder.GetDecoder()); // init后，显式的一次调用
 
-	ListenEvent(Pather, Player, Device, Decoder, DoubleBuffering);
+	Player.InitDevice(Decoder, Device, data_callback, DoubleBuffering); // 确保双缓冲被正确初始化，才能给到回调函数来获取信息
+	Status Timer(Decoder);
+	std::thread(&Status::ProgressThread, &Timer, std::ref(Decoder), std::ref(DoubleBuffering)).detach(); // Start the Time Counter Thread
+	Player.Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, DoubleBuffering); // init后，显式的一次调用
+
+	ListenEvent(Pather, Player, Device, Decoder, Timer, DoubleBuffering);
 
 	std::cin.get();
 	return 0;

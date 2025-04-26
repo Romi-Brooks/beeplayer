@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "Path.hpp"
-
+#include "../Log/LogSystem.hpp"
 
 void Path::InitSongList() {
 	p_song_names.clear();
@@ -42,7 +42,10 @@ void Path::InitSongList() {
 		// Skip Folder Error
 	}
 }
-Path::Path(const std::string &root) : p_root_path(root) { InitSongList(); }
+Path::Path(const std::string &root) : p_root_path(root) {
+	LOG_INFO("Set Root Path: " + root);
+	InitSongList();
+}
 
 std::string Path::NextFilePath() {
 	if (p_song_names.empty())
