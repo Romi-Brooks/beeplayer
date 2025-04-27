@@ -9,6 +9,9 @@
 // #include <iostream>
 
 #include "Decoder.hpp"
+
+#include <iostream>
+
 #include "../Log/LogSystem.hpp"
 
 ma_decoder& AudioDecoder::GetDecoder() {
@@ -20,5 +23,7 @@ void AudioDecoder::InitDecoder(const std::string &FilePath) {
 	if (result != MA_SUCCESS) {
 		LOG_ERROR("miniaudo -> Error to loading the file:"  + FilePath);
 	}
-	LOG_INFO("Audio Decoder -> Init Decoder Completed.");
+	std::cout << "Audio Decoder -> Init Decoder Completed with file's sample rate: " << p_decoder.outputSampleRate << "Hz"
+			  << " and file format: " << p_decoder.outputFormat << std::endl;
+	// LOG_INFO("Audio Decoder -> Init Decoder Completed.");
 }

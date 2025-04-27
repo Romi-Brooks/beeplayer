@@ -19,6 +19,7 @@
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the
 // Decoder and Device classes for unified management
 // and provides essential player functionalities.
+
 enum SwitchAction {
 	NEXT, PREV
 };

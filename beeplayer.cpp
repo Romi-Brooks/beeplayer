@@ -20,9 +20,10 @@
 #include "Engine/Decoder.hpp"
 #include "Engine/Device.hpp"
 #include "Engine/Player.hpp"
+#include "Engine/Status.hpp"
 #include "Log/LogSystem.hpp"
 #include "FileSystem/Path.hpp"
-#include "Engine/Status.hpp"
+
 
 
 // 修改后的回调函数
@@ -62,6 +63,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 		memset(static_cast<char*>(pOutput) + bytesToCopy, 0, remainingBytes);
 	}
 }
+
 // To provide the Listen Event can be Non-blocking.
 #ifdef _WIN32 // For windows platfrom Non-blocking input
 #include <conio.h>
@@ -81,8 +83,9 @@ bool IsInputAvailable() {
 void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDecoder& Decoder, Status& Timer, AudioBuffering& Buffer) {
     std::cout << "Press e to Exit, p to Pause, n to next, u to Prev." << std::endl;
     while (true) {
-    	Player.NextFileCheck(Buffer, Timer, Pather, Decoder, Device, data_callback); // Check if the current song is over
-        // 非阻塞检查用户输入
+    	std::this_thread::sleep_for(std::chrono::milliseconds(50)); // 关键修改：添加休眠
+    	// Player.NextFileCheck(Buffer, Timer, Pather, Decoder, Device, data_callback); // Check if the current song is over
+    	// 非阻塞检查用户输入
         if (IsInputAvailable()) {
             char key;
             std::cin >> key;
@@ -119,7 +122,6 @@ void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDe
                 }
             }
         }
-
     }
 }
 
@@ -148,7 +150,6 @@ int main(int argc, char** argv) {
 	// 创建Path对象
 	Path Pather(rootPath);
 
-
 	AudioDecoder Decoder;
 	AudioDevice& Device = AudioDevice::GetDeviceInstance();
 	AudioPlayer Player;
@@ -158,7 +159,10 @@ int main(int argc, char** argv) {
 
 	Player.InitDevice(Decoder, Device, data_callback, DoubleBuffering); // 确保双缓冲被正确初始化，才能给到回调函数来获取信息
 	Status Timer(Decoder);
+
 	std::thread(&Status::ProgressThread, &Timer, std::ref(Decoder), std::ref(DoubleBuffering)).detach(); // Start the Time Counter Thread
+	std::thread(Player.NextFileCheck, Player, std::ref(DoubleBuffering), std::ref(Timer), std::ref(Pather), std::ref(Decoder), std::ref(Device), data_callback).detach();
+
 	Player.Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, DoubleBuffering); // init后，显式的一次调用
 
 	ListenEvent(Pather, Player, Device, Decoder, Timer, DoubleBuffering);

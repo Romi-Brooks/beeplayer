@@ -51,7 +51,7 @@ void AudioBuffering::BufferFiller(ma_decoder *pDecoder) {
 		}
 
 		// 计算需要读取的帧数（示例：500ms的缓冲）
-		const ma_uint32 targetFrames = p_outputSampleRate * 0.5;
+		const ma_uint32 targetFrames = p_outputSampleRate * 0.7f;
 		p_buffers[nextBuffer].s_data.resize(targetFrames * ma_get_bytes_per_frame(pDecoder->outputFormat, pDecoder->outputChannels));
 
 		// 读取音频数据

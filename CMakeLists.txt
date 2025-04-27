@@ -19,3 +19,16 @@ add_executable(beeplayer miniaudio/miniaudio.c beeplayer.cpp
         FileSystem/Path.cpp
         FileSystem/Path.hpp
 )
+
+# Static linking to exec file
+if(MINGW)
+    # 静态链接C/C++标准库
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+
+    # libwinpthread-1.dll
+    find_package(Threads REQUIRED)
+    target_link_libraries(beeplayer PRIVATE Threads::Threads)
+
+    # 强制静态链接标准库（双重保险）
+    target_link_options(beeplayer PRIVATE -static-libgcc -static-libstdc++)
+endif()

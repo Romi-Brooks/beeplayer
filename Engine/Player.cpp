@@ -74,13 +74,15 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 	Timer.SetFileLength(Decoder); // reset the file length
 	LOG_INFO("Audio Player-> Device init completed.");
 
+	// Rerun the double buffering progress
+	Buffer.GetBufferThread() = std::thread(&AudioBuffering::BufferFiller, &Buffer, &Decoder.GetDecoder());
+	LOG_INFO("Buffer Thread -> Rerun the double buffering progress.");
+
 	// Third: Just Playing the file from decoder and device
 	Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, Buffer);
 	LOG_INFO("Audio Player -> Start Playing.");
 
-	// Rerun the double buffering progress
-	Buffer.GetBufferThread() = std::thread(&AudioBuffering::BufferFiller, &Buffer, &Decoder.GetDecoder());
-	LOG_INFO("Buffer Thread -> Rerun the double buffering progress.");
+
 
 
 	// Rerun the Time Counter progress
@@ -89,14 +91,20 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 	// ListenEvent(decoder, deviceConfig, device); // No hpp file include
 }
 void AudioPlayer::NextFileCheck(AudioBuffering &Buffer, Status &Timer, Path &Pather, AudioDecoder &Decoder, AudioDevice &Device, const ma_device_data_proc &Callback) {
-	auto current = Buffer.GetGlobalFrameCount();
-	auto total = Timer.GetTotalFrames();
-	if (total > 0 && current >= total) {
-		LOG_INFO("\nPlayer -> End of track, switching to next...");
-		Switch(Pather, Decoder, Device, Callback, Timer, Buffer, SwitchAction::NEXT);
-		// 重置计数器避免重复触发
-		current = 0;
-		total = Timer.GetTotalFrames();
+	while (true) {
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+	{
+			double currentTime = Buffer.GetGlobalFrameCount() / Decoder.GetDecoder().outputSampleRate;
+			double totalTime = Timer.GetTotalFrames() / Decoder.GetDecoder().outputSampleRate;
+			// std::cout << "Timer Checker -> Current Time/Total Time:" << currentTime << "/" << totalTime << std::endl; // Debugger
+			if (totalTime > 0 && currentTime >= totalTime) {
+				LOG_INFO("Player -> End of track, switching to next...");
+				Switch(Pather, Decoder, Device, Callback, Timer, Buffer, SwitchAction::NEXT);
+				// 重置计数器避免重复触发
+				currentTime = 0;
+				totalTime = 0;
+			}
+		}
 	}
 }
 

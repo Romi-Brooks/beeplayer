@@ -1,14 +1,13 @@
-**If you have not enabled the "Use Unicode UTF-8 to provide global language support." in Windows system，When expecting to play non-English tracks,**  
-**the path you input will result in an error when using cmd line without -root option**
-
+**If you have not enabled the "Use Unicode UTF-8 to provide global language support." in Windows system，**  
+**When you input the path to play non-English songs, it'll throw a filename error.**
 **I don't know how to solve this problem.**   
-**(There may be issues between Windows and miniaudio when handling certain wchar characters, or something...)**  
-**I'm sorry for this. And i wish who can give me a pull request to solve it. TuT**  
+**From what I can tell for now, maybe the miniaudio library or some other factors may have encoding issues with the default 
+encoding of Windows systems (GBK, possibly), and this is something I've never come across before.**  
+**I'm sorry for that. And I hope someone can propose a pull request to fix it. TuT**  
 
-**如果你在Windows系统中未启用“使用Unicode UTF-8提供全球语言支持”功能，在期望播放非英文曲目的时候**
-**在未使用-root选项的情况下通过命令行输入路径将会出现错误。**  
+**如果你在Windows系统中未启用“使用Unicode UTF-8提供全球语言支持”功能，在期望播放非英文曲目的时候输入路径将会抛出文件名错误。**  
 **我还不知道如何解决这个问题。**  
-**（也许是在处理某些宽字符时，Windows系统或者Miniaudio存在一些问题。）**  
+**初步判断是miniaudio库或者是一些其他的位置情况与非英文Windows系统默认编码GBK(可能)造成了编码方面的错误，这是我从未遇见过的。**  
 **对此我感到抱歉。我也希望有人能够提出一个pull request来解决这个问题。TuT**
 
 ## Beeplayer PreBuild version

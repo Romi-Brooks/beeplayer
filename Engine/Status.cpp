@@ -26,12 +26,8 @@ void Status::ProgressThread(AudioDecoder &Decoder, AudioBuffering &Buffer) {
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 		{
-			const auto current = Buffer.GetGlobalFrameCount();
-			const auto total = p_fileTotalFrames.load();
-
-			const double currentTime = current / Decoder.GetDecoder().outputSampleRate;
-			const double totalTime = total / Decoder.GetDecoder().outputSampleRate;
-
+			const double currentTime = Buffer.GetGlobalFrameCount() / Decoder.GetDecoder().outputSampleRate;
+			const double totalTime = p_fileTotalFrames.load() / Decoder.GetDecoder().outputSampleRate;
 			std::cout << "\rNow Playing:" << std::setfill('0') << std::setw(2) << static_cast<int>(currentTime) / 60
 					  << ":" << std::setfill('0') << std::setw(2) << static_cast<int>(currentTime) % 60 << "/"
 					  << std::setfill('0') << std::setw(2) << static_cast<int>(totalTime) / 60 << ":"
