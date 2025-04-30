@@ -3,7 +3,16 @@ project(beeplayer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(beeplayer miniaudio/miniaudio.c beeplayer.cpp
+include_directories(imgui/glfw/include
+                    imgui/
+                    imgui/backends)
+
+link_directories(imgui/glfw/lib-mingw-w64)
+
+file(GLOB_RECURSE IMGUI_SRCS imgui/*.cpp)
+
+add_executable(beeplayer miniaudio/miniaudio.c
+#        beeplayer.cpp
         Engine/Device.cpp
         Engine/Device.hpp
         Engine/Decoder.cpp
@@ -18,6 +27,8 @@ add_executable(beeplayer miniaudio/miniaudio.c beeplayer.cpp
         Log/LogSystem.hpp
         FileSystem/Path.cpp
         FileSystem/Path.hpp
+        ${IMGUI_SRCS}
+         GUI/GUI.cpp
 )
 
 # Static linking to exec file
@@ -27,7 +38,7 @@ if(MINGW)
 
     # libwinpthread-1.dll
     find_package(Threads REQUIRED)
-    target_link_libraries(beeplayer PRIVATE Threads::Threads)
+    target_link_libraries(beeplayer PRIVATE Threads::Threads glfw3.a opengl32)
 
     # 强制静态链接标准库（双重保险）
     target_link_options(beeplayer PRIVATE -static-libgcc -static-libstdc++)
