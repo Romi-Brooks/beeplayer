@@ -4,14 +4,6 @@
 
 <h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++.</h3>  
 
-> [!IMPORTANT]  
-> Beeplayer 预构建版本发布啦！  
-> 在PreBuild目录下，你可以找到编译好的可执行文件。  
-> 不过这只是一个预先构建版本，你需要去仔细阅读文件夹中的README文档。  
-> Beeplayer Prebuilt Version is Out!  
-> In the PreBuild directory, you can find the compiled executable files.  
-> However, this is just a prebuilt version, and you need to carefully read the README in the folder.
-
 - [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
 - [x] 修复wav/mp3文件相互切换会有高频噪声的bug
@@ -25,7 +17,6 @@
 - [ ] 加入UI
 - [x] 加入Log系统 -> 有些问题，需要修改一下
 - [ ] 重写错误处理(事实上根本没有 :/)
-
 
 - License:  
  Beeplayer complies with the [MIT No Attribution](LICENSE) License, For more information, refer to the [LICENSE](LICENSE) file.  
