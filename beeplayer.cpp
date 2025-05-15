@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
 	Status Timer(Decoder);
 
 	std::thread(&Status::ProgressThread, &Timer, std::ref(Decoder), std::ref(DoubleBuffering)).detach(); // Start the Time Counter Thread
-	std::thread(Player.NextFileCheck, Player, std::ref(DoubleBuffering), std::ref(Timer), std::ref(Pather), std::ref(Decoder), std::ref(Device), data_callback).detach();
+	std::thread(&AudioPlayer::NextFileCheck, &Player, std::ref(DoubleBuffering), std::ref(Timer), std::ref(Pather), std::ref(Decoder), std::ref(Device), data_callback).detach();
 
 	Player.Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, DoubleBuffering); // init后，显式的一次调用
 

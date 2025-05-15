@@ -1,16 +1,8 @@
-# Beeplayer  
+# Beeplayer - With ImGUI
 
 *<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
 <h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++.</h3>  
-
-> [!IMPORTANT]  
-> Beeplayer 预构建版本发布啦！  
-> 在PreBuild目录下，你可以找到编译好的可执行文件。  
-> 不过这只是一个预先构建版本，你需要去仔细阅读文件夹中的README文档。  
-> Beeplayer Prebuilt Version is Out!  
-> In the PreBuild directory, you can find the compiled executable files.  
-> However, this is just a prebuilt version, and you need to carefully read the README in the folder.
 
 - [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
