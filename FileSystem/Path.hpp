@@ -37,17 +37,25 @@ class Path {
 		// Get Current File Path
 		std::string CurrentFilePath() const;
 
+		// Get all the name of the song list
+		const std::vector<std::string>& GetFiles() const { return p_song_names; }
+
 		// Get file name
 		static std::string GetFileName(const std::string& path);
 
 		// Get current index
 		size_t Index() const { return p_current_index; }
 
+		// Set Index by user switch
+		void SetIndex(size_t index);
+
 		// Get Song Count
 		size_t TotalSong() const { return p_song_names.size(); }
 
 		// Get All Song Names
 		void GetAllSongNames() const;
+
+
 
 		// Rescan the folder
 		void Rescan();

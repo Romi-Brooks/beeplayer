@@ -69,6 +69,10 @@ std::string Path::CurrentFilePath() const {
 
 std::string Path::GetFileName(const std::string &path) { return fs::path(path).filename().string(); }
 
+void Path::SetIndex(size_t index) {
+	this->p_current_index = index;
+}
+
 void Path::GetAllSongNames() const {
 	for(const auto& it : p_song_names) {
 		std::cout << it << std::endl;

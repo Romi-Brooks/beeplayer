@@ -45,16 +45,21 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 		case SwitchAction::NEXT: {
 			LOG_INFO("Audio Player-> Switch Next!");
 			Pather.NextFilePath();
-			SetName(Pather.GetFileName(Pather.CurrentFilePath()));
+			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
 		// Set To the previous file.
 		case SwitchAction::PREV: {
 			LOG_INFO("Audio Player-> Switch Pre!");
 			Pather.PrevFilePath();
-			SetName(Pather.GetFileName(Pather.CurrentFilePath()));
+			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
+		case SwitchAction::SPECIFIC:
+			// 直接跳转到当前索引的歌曲
+			LOG_INFO("Audio Player-> Jump To Selected!");
+			SetName(Path::GetFileName(Pather.CurrentFilePath()));
+			break;
 		default: {
 			break; // No matter what, code should be 0-1
 		}

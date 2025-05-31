@@ -9,7 +9,6 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-// #include <string>
 
 #include "Status.hpp"
 #include "Decoder.hpp"
@@ -21,7 +20,7 @@
 // and provides essential player functionalities.
 
 enum SwitchAction {
-	NEXT, PREV
+	NEXT, PREV, SPECIFIC
 };
 
 class AudioPlayer {

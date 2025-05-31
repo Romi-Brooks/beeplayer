@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <sstream>
 
 #include "Device.hpp"
 #include "../Log/LogSystem.hpp"
@@ -29,8 +30,10 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
     p_deviceConfig.pUserData         = DoubleBuffering;   // Can be accessed from the device object (device.pUserData).
 
 	// LOG_INFO("Audio Device -> Device Config Initialized.");
-	std::cout << "Audio Devvice -> Init Device Completed with device's sample rate: " << p_deviceConfig.sampleRate << "Hz"
-		  << " and device format: " << p_deviceConfig.playback.format << std::endl;
+	std::stringstream ss;
+	ss << "Audio Device -> Init Device Completed with device's sample rate: " << p_deviceConfig.sampleRate << "Hz"
+	   << " and device format: " << p_deviceConfig.playback.format;
+	LOG_INFO(ss.str());
 }
 
 void AudioDevice::InitDevice(ma_decoder &Decoder) {

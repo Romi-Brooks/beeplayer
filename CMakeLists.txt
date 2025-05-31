@@ -3,43 +3,86 @@ project(beeplayer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(imgui/glfw/include
-                    imgui/
-                    imgui/backends)
+# 设置输出目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-link_directories(imgui/glfw/lib-mingw-w64)
-
-file(GLOB_RECURSE IMGUI_SRCS imgui/*.cpp)
-
-add_executable(beeplayer miniaudio/miniaudio.c
-#        beeplayer.cpp
-        Engine/Device.cpp
-        Engine/Device.hpp
-        Engine/Decoder.cpp
-        Engine/Decoder.hpp
-        Engine/Player.cpp
-        Engine/Player.hpp
-        Engine/Buffering.cpp
-        Engine/Buffering.hpp
-        Engine/Status.cpp
-        Engine/Status.hpp
-        Log/LogSystem.cpp
-        Log/LogSystem.hpp
-        FileSystem/Path.cpp
-        FileSystem/Path.hpp
-        ${IMGUI_SRCS}
-         GUI/GUI.cpp
+# 包含目录
+include_directories(
+        imgui/glfw/include
+        imgui
+        imgui/backends
+        miniaudio
+        Engine
+        Log
+        FileSystem
 )
 
-# Static linking to exec file
+# 收集源文件
+file(GLOB_RECURSE IMGUI_SRCS
+        "imgui/*.cpp"
+        "imgui/backends/imgui_impl_glfw.cpp"
+        "imgui/backends/imgui_impl_opengl3.cpp"
+)
+
+# 添加可执行文件
+add_executable(beeplayer
+        miniaudio/miniaudio.c
+        Beeplayer.cpp
+        Engine/Device.cpp
+        Engine/Decoder.cpp
+        Engine/Player.cpp
+        Engine/Buffering.cpp
+        Engine/Status.cpp
+        Log/LogSystem.cpp
+        FileSystem/Path.cpp
+        ${IMGUI_SRCS}
+)
+
+# 设置静态链接选项
 if(MINGW)
-    # 静态链接C/C++标准库
+    # 静态链接选项
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-
-    # libwinpthread-1.dll
-    find_package(Threads REQUIRED)
-    target_link_libraries(beeplayer PRIVATE Threads::Threads glfw3.a opengl32)
-
-    # 强制静态链接标准库（双重保险）
     target_link_options(beeplayer PRIVATE -static-libgcc -static-libstdc++)
 endif()
+
+# 查找 GLFW 库
+find_library(GLFW_LIBRARY
+        NAMES glfw3 glfw
+        PATHS ${CMAKE_SOURCE_DIR}/imgui/glfw/lib-mingw-w64
+        NO_DEFAULT_PATH
+)
+
+if(GLFW_LIBRARY)
+    message(STATUS "找到 GLFW 库: ${GLFW_LIBRARY}")
+    # 使用关键字签名链接 GLFW
+    target_link_libraries(beeplayer PRIVATE ${GLFW_LIBRARY})
+else()
+    message(FATAL_ERROR "未找到 GLFW 库！请检查路径")
+endif()
+
+# 链接 Windows 平台需要的其他库 - 使用关键字签名
+target_link_libraries(beeplayer PRIVATE
+        opengl32
+        gdi32
+)
+
+# 链接系统库 - 使用关键字签名
+target_link_libraries(beeplayer PRIVATE
+        kernel32
+        user32
+        gdi32
+        winspool
+        shell32
+        ole32
+        oleaut32
+        uuid
+        comdlg32
+        advapi32
+)
+
+# 设置目标属性
+set_target_properties(beeplayer PROPERTIES
+        CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS OFF
+)

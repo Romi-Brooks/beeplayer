@@ -6,11 +6,10 @@
  *  Type: Core Engine
  */
 
-// #include <iostream>
+#include <iostream>
+#include <sstream>
 
 #include "Decoder.hpp"
-
-#include <iostream>
 
 #include "../Log/LogSystem.hpp"
 
@@ -23,7 +22,8 @@ void AudioDecoder::InitDecoder(const std::string &FilePath) {
 	if (result != MA_SUCCESS) {
 		LOG_ERROR("miniaudo -> Error to loading the file:"  + FilePath);
 	}
-	std::cout << "Audio Decoder -> Init Decoder Completed with file's sample rate: " << p_decoder.outputSampleRate << "Hz"
-			  << " and file format: " << p_decoder.outputFormat << std::endl;
-	// LOG_INFO("Audio Decoder -> Init Decoder Completed.");
+	std::stringstream ss;
+	ss << "Audio Decoder -> Init Decoder Completed with file's sample rate: " << p_decoder.outputSampleRate << "Hz"
+			  << " and file format: " << p_decoder.outputFormat;
+	LOG_INFO(ss.str());
 }
