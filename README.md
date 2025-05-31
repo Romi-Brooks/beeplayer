@@ -4,6 +4,11 @@
 
 <h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++.</h3>  
 
+[//]: # (Beeplayer GUI Image)
+![Beeplayer-GUI](/Resource/image/Beeplayer_GUI.png "Beeplayer GUI")
+
+> 基于ImGUI的一个简单桌面应用实现 (后续会持续优化)  
+
 - [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
 - [x] 修复wav/mp3文件相互切换会有高频噪声的bug
