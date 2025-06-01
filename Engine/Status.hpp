@@ -1,14 +1,15 @@
 /*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Status.hpp
- *  Lib: Beeplayer Core engine Progress Status
+ *  Lib: Beeplayer Core engine Progress Status definitions
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: Core Engine
+ *  Type: Status, Core Engine
  */
 
 #ifndef STATUS_HPP
 #define STATUS_HPP
 
+// Basic Lib
 #include "../miniaudio/miniaudio.h"
 #include "Buffering.hpp"
 #include "Decoder.hpp"
@@ -17,7 +18,7 @@ class Status {
 public:
 	explicit Status(AudioDecoder& Decoder);
 
-	void ProgressThread(AudioDecoder& Decoder, AudioBuffering& Buffer);
+	// void ProgressThread(AudioDecoder& Decoder, AudioBuffering& Buffer);
 
 	void SetFileLength(AudioDecoder& Decoder);
 	ma_uint64 GetTotalFrames() const  { return p_fileTotalFrames; }

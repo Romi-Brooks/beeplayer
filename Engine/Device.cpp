@@ -3,13 +3,16 @@
  *  Lib: Beeplayer Core engine Audio Device lib
  *  Author: Romi Brooks
  *  Date: 2025-04-22
- *  Type: Core Engine
+ *  Type: Device, Core Engine
  */
 
+#include "Device.hpp"
+
+// Standard Lib
 #include <iostream>
 #include <sstream>
 
-#include "Device.hpp"
+// Basic Lib
 #include "../Log/LogSystem.hpp"
 
 ma_device & AudioDevice::GetDevice() {
@@ -20,7 +23,7 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
 	p_deviceConfig = ma_device_config_init(ma_device_type_playback);
     p_deviceConfig.playback.format   = Format;
     // Device channels equal 2, indicating stereo.
-    // Actually, No one can use this pieces of shit exec to listen 7.1 or something right..?
+    // Actually, No one can use this pieces of shit exec to listen 7.1 or something right?
     p_deviceConfig.playback.channels = 2;
     // Under normal conditions, the sample rate is 44.1 kHz or 48.0 kHz.
     // When tracks are switched, the sample rate may change.

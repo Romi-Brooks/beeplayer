@@ -3,7 +3,7 @@
  *  Lib: Beeplayer I/O Log System
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: I/O LOG
+ *  Type: I/O, LOG System
  */
 
 #include <string>

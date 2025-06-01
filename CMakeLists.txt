@@ -27,16 +27,26 @@ file(GLOB_RECURSE IMGUI_SRCS
 
 # 添加可执行文件
 add_executable(beeplayer
+#       miniaudio Lib
         miniaudio/miniaudio.c
+#       Beeplayer Main prog
         Beeplayer.cpp
+#       Abstract Wrapper
         Engine/Device.cpp
         Engine/Decoder.cpp
         Engine/Player.cpp
         Engine/Buffering.cpp
         Engine/Status.cpp
+        Engine/MusicPlayerState.cpp
+        Engine/MusicPlayerState.hpp
+        Engine/DataCallback.cpp
+        Engine/DataCallback.hpp
         Log/LogSystem.cpp
         FileSystem/Path.cpp
+#       GUI Provided
         ${IMGUI_SRCS}
+        GUI/UI.cpp
+        GUI/UI.hpp
 )
 
 # 设置静态链接选项

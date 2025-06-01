@@ -1,27 +1,29 @@
 /*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Buffering.hpp
- *  Lib: Beeplayer Core engine Audio Buffer -> Double buffering lib
+ *  Lib: Beeplayer Core engine Audio Buffer definitions -> Double buffering lib
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: Core Engine
+ *  Type: Buffers, Core Engine
  */
 
 #ifndef BUFFERING_HPP
 #define BUFFERING_HPP
 
+// Standard Lib
 #include <atomic>
 #include <thread>
 #include <vector>
 
+// Basic Lib
 #include "../miniaudio/miniaudio.h"
 
 class AudioBuffering {
 	public:
 		struct Buffer {
-			std::vector<ma_uint8> s_data;    // 原始音频数据
-			ma_uint64 s_startFrame = 0;      // 缓冲区起始帧位置
-			ma_uint64 s_totalFrames = 0;     // 缓冲区总帧数
-			std::atomic<bool> s_ready{false};// 缓冲区就绪状态
+			std::vector<ma_uint8> s_data; // 原始音频数据
+			ma_uint64 s_startFrame = 0; // 缓冲区起始帧位置
+			ma_uint64 s_totalFrames = 0; // 缓冲区总帧数
+			std::atomic<bool> s_ready{false}; // 缓冲区就绪状态
 		};
 
 	    explicit AudioBuffering(ma_decoder *decoder);

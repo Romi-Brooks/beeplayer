@@ -1,9 +1,9 @@
 /*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: LogSystem.hpp
- *  Lib: Beeplayer I/O Log System
+ *  Lib: Beeplayer I/O Log System definitions
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: I/O LOG
+ *  Type: I/O, LOG System
  */
 
 #ifndef LOG_HPP

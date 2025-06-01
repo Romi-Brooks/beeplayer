@@ -3,14 +3,14 @@
  *  Lib: Beeplayer Core engine Audio Decoder lib
  *  Author: Romi Brooks
  *  Date: 2025-04-22
- *  Type: Core Engine
+ *  Type: Decoder, Core Engine
  */
-
-#include <iostream>
-#include <sstream>
-
 #include "Decoder.hpp"
 
+// Standard Lib
+#include <sstream>
+
+// Basic Lib
 #include "../Log/LogSystem.hpp"
 
 ma_decoder& AudioDecoder::GetDecoder() {

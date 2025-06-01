@@ -1,6 +1,6 @@
 /*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Path.hpp
- *  Lib: Beeplayer Song List File System
+ *  Lib: Beeplayer Song List File System definitions
  *  Author: Romi Brooks
  *  Date: 2025-04-24
  *  Type: FileSystem
