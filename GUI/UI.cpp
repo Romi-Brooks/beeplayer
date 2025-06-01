@@ -59,6 +59,16 @@ UI::~UI()  {
 	if (window) {
 		glfwDestroyWindow(window);
 	}
+
+	if (playerState.initialized) {
+		std::lock_guard<std::mutex> lock(playerState.audioMutex);
+		ma_device_stop(&playerState.Device->GetDevice());
+		playerState.Timer->ResetStatus();
+		playerState.progress = 0.0f;
+		playerState.isPlaying = false;
+	}
+	CleanupAudioPlayer(playerState);
+
 	glfwTerminate();
 }
 
@@ -196,9 +206,9 @@ void UI::RenderMainUI() const {
 	ImGui::Text("音量控制");
 	if (ImGui::SliderFloat("##volume", &playerState.volume, 0.0f, 1.0f, "%.1f")) {
 		// 在实际应用中设置音量
-		// if (playerState.initialized) {
-		//     ma_device_set_master_volume(&playerState.device->GetDevice(), playerState.volume);
-		// }
+		if (playerState.initialized) {
+		    ma_device_set_master_volume(&playerState.Device->GetDevice(), playerState.volume);
+		}
 	}
 
 	// 播放列表
@@ -294,16 +304,16 @@ void UI::RenderPlaylist() const {
 			// 设置新索引
 			playerState.Pather->SetIndex(playerState.currentTrack);
 
-			// 如果新索引大于当前索引，使用 NEXT 动作
-			// 如果小于，使用 PREV 动作
-			SwitchAction action = (playerState.currentTrack > currentIndex)
-								 ? SwitchAction::NEXT : SwitchAction::PREV;
+			// // 如果新索引大于当前索引，使用 NEXT 动作
+			// // 如果小于，使用 PREV 动作
+			// SwitchAction action = (playerState.currentTrack > currentIndex)
+			// 					 ? SwitchAction::NEXT : SwitchAction::PREV;
 
 			// 调用切换函数
 			playerState.Player->Switch(
 				*playerState.Pather, *playerState.Decoder,
 				*playerState.Device, data_callback, *playerState.Timer,
-				*playerState.Buffer, action
+				*playerState.Buffer, SPECIFIC
 			);
 
 			playerState.isPlaying = true;
