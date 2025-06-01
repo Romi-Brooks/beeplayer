@@ -55,21 +55,26 @@ UI::~UI()  {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+	LOG_INFO("Exiting IMGUI&GLFW");
 
 	if (window) {
 		glfwDestroyWindow(window);
 	}
+	LOG_INFO("Destroy Window");
+
+	glfwTerminate();
+	LOG_INFO("glfwTerminate...");
 
 	if (playerState.initialized) {
 		std::lock_guard<std::mutex> lock(playerState.audioMutex);
-		ma_device_stop(&playerState.Device->GetDevice());
+		playerState.Player->Exit(*playerState.Device,*playerState.Decoder);
 		playerState.Timer->ResetStatus();
 		playerState.progress = 0.0f;
 		playerState.isPlaying = false;
 	}
-	CleanupAudioPlayer(playerState);
+	LOG_INFO("Stop Player State");
 
-	glfwTerminate();
+	exit(0);
 }
 
 void UI::LoadFont()  {
@@ -113,7 +118,9 @@ void UI::LoadFont()  {
 			LOG_WARNING("ImGUI -> Can not load the font, using default!");
 		}
 	} catch (const std::exception& e) {
-		std::cerr << "ImGUI -> 字体加载错误: " << e.what() << std::endl;
+		std::stringstream ss;
+		ss << "ImGUI -> Error when loading the font: " << e.what();
+		LOG_ERROR(ss.str());
 		// 回退到默认字体
 		io->Fonts->AddFontDefault();
 	}
@@ -203,8 +210,8 @@ void UI::RenderMainUI() const {
 
 	// 音量控制
 	ImGui::Separator();
-	ImGui::Text("音量控制");
-	if (ImGui::SliderFloat("##volume", &playerState.volume, 0.0f, 1.0f, "%.1f")) {
+	ImGui::Text("音量");
+	if (ImGui::SliderFloat("##volume", &playerState.volume, 0.0f, 1.0f, "%.2f")) {
 		// 在实际应用中设置音量
 		if (playerState.initialized) {
 		    ma_device_set_master_volume(&playerState.Device->GetDevice(), playerState.volume);
@@ -223,7 +230,7 @@ void UI::RenderControlButtons() const  {
         ImGui::BeginGroup();
 
         // 上一曲按钮
-        if (ImGui::Button("上一曲", ImVec2(80, 40))) {
+        if (ImGui::Button("上一首", ImVec2(80, 40))) {
             if (playerState.initialized) {
                 std::lock_guard<std::mutex> lock(playerState.audioMutex);
                 playerState.Player->Switch(
@@ -267,7 +274,7 @@ void UI::RenderControlButtons() const  {
         ImGui::SameLine();
 
         // 下一曲按钮
-        if (ImGui::Button("下一曲", ImVec2(80, 40))) {
+        if (ImGui::Button("下一首", ImVec2(80, 40))) {
             if (playerState.initialized) {
                 std::lock_guard<std::mutex> lock(playerState.audioMutex);
                 playerState.Player->Switch(

@@ -47,7 +47,7 @@ class AudioPlayer {
 		// This Function is using for switch the song, when the file is play done.
 		void NextFileCheck(AudioBuffering& Buffer, Status& Timer, Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback);
 		void Clean(AudioBuffering& Buffer, Status& Timer, AudioDecoder& Decoder, AudioDevice& Device);
-		void Exit(ma_device& device, ma_decoder& decoder);
+		void Exit(AudioDevice &Device, AudioDecoder &Decoder);
 
 	private:
 		float p_volume;

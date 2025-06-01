@@ -62,8 +62,6 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	// 清理音频资源
-	CleanupAudioPlayer(PlayerState);
 
 	return 0;
 }

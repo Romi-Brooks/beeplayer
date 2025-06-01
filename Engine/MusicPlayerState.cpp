@@ -95,7 +95,7 @@ void CleanupAudioPlayer(MusicPlayerState& state) {
 
 	if (state.initialized) {
 		if (state.Player && state.Device) {
-			state.Player->Exit(state.Device->GetDevice(), state.Decoder->GetDecoder());
+			state.Player->Exit(*state.Device, *state.Decoder);
 		}
 
 		delete state.Pather;

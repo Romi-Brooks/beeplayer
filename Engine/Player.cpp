@@ -117,7 +117,8 @@ void AudioPlayer::Clean(AudioBuffering &Buffer, Status& Timer , AudioDecoder &De
 	Buffer.ResetBuffer();
 }
 
-void AudioPlayer::Exit(ma_device &device, ma_decoder &decoder) {
-	ma_device_uninit(&device);
-	ma_decoder_uninit(&decoder);
+void AudioPlayer::Exit(AudioDevice &Device, AudioDecoder &Decoder) {
+	ma_device_stop(&Device.GetDevice());
+	ma_device_uninit(&Device.GetDevice());
+	ma_decoder_uninit(&Decoder.GetDecoder());
 }
