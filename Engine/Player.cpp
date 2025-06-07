@@ -1,40 +1,42 @@
 /*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *  File Name: Player.cpp
- *  Lib: Beeplayer Core engine Audio Player lib
+ *  Lib: Beeplayer Core engine Wrapper -> Abstract Low-Level controller
  *  Author: Romi Brooks
  *  Date: 2025-04-22
- *  Type: Core Engine
+ *  Type: Wrapper, Player, Core Engine
  */
 
+#include "Player.hpp"
+
+// Standard Lib
 #include <iostream>
 #include <thread>
 
+// Basic Lib
+#include "Buffering.hpp"
 #include "../miniaudio/miniaudio.h"
 #include "../Log/LogSystem.hpp"
 #include "../FileSystem/Path.hpp"
 
-#include "Player.hpp"
-#include "Buffering.hpp"
 
-void AudioPlayer::Play(ma_device &Device, ma_decoder &Decoder, Status& Timer, AudioBuffering& Buffer) const {
-	if (ma_device_start(&Device) != MA_SUCCESS) {
+void AudioPlayer::Play(AudioDevice& Device, AudioDecoder& Decoder) const {
+	if (ma_device_start(&Device.GetDevice()) != MA_SUCCESS) {
 		LOG_ERROR("miniaudio -> Error when play the file.");
-		ma_device_uninit(&Device);
-		ma_decoder_uninit(&Decoder);
+		ma_device_uninit(&Device.GetDevice());
+		ma_decoder_uninit(&Decoder.GetDecoder());
 	}
 
 	LOG_INFO("Audio Player-> Now Playing: " + this->GetName());
 }
 
-void AudioPlayer::InitDecoder(Path& Pather, AudioDecoder& Decoder) {
-	// 总是在主函数中首先调用
+void AudioPlayer::InitDecoder(const Path & Pather, AudioDecoder& Decoder) {
 	Decoder.InitDecoder(Pather.CurrentFilePath());
 	SetName(Path::GetFileName(Pather.CurrentFilePath()));
 }
 
 void AudioPlayer::InitDevice(AudioDecoder& Decoder, AudioDevice &Device, const ma_device_data_proc &Callback,
 							 AudioBuffering &Buffer) {
-	Device.InitDeviceConfig(ma_standard_sample_rate_44100, ma_format_f32, Callback, Decoder.GetDecoder(), &Buffer);
+	Device.InitDeviceConfig(Decoder.GetDecoder().outputSampleRate, Decoder.GetDecoder().outputFormat, Callback, Decoder.GetDecoder(), &Buffer);
 	Device.InitDevice(Decoder.GetDecoder());
 }
 
@@ -45,16 +47,21 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 		case SwitchAction::NEXT: {
 			LOG_INFO("Audio Player-> Switch Next!");
 			Pather.NextFilePath();
-			SetName(Pather.GetFileName(Pather.CurrentFilePath()));
+			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
 		// Set To the previous file.
 		case SwitchAction::PREV: {
 			LOG_INFO("Audio Player-> Switch Pre!");
 			Pather.PrevFilePath();
-			SetName(Pather.GetFileName(Pather.CurrentFilePath()));
+			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
+		case SwitchAction::SPECIFIC:
+			// using for Switch the specific index's song (aka: user's choice in ui)
+			LOG_INFO("Audio Player-> Jump To Selected!");
+			SetName(Path::GetFileName(Pather.CurrentFilePath()));
+			break;
 		default: {
 			break; // No matter what, code should be 0-1
 		}
@@ -79,20 +86,15 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 	LOG_INFO("Buffer Thread -> Rerun the double buffering progress.");
 
 	// Third: Just Playing the file from decoder and device
-	Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, Buffer);
+	Play(Device, Decoder);
 	LOG_INFO("Audio Player -> Start Playing.");
 
-
-
-
-	// Rerun the Time Counter progress
-	// std::thread(&Status::ProgressThread, this, std::ref(Decoder), std::ref(Buffer)).detach();
-	// LOG_INFO("Status Thread -> Rerun the double buffering progress.");
-	// ListenEvent(decoder, deviceConfig, device); // No hpp file include
 }
+
+// This Function is using for switch the song, when the file is play done.
 void AudioPlayer::NextFileCheck(AudioBuffering &Buffer, Status &Timer, Path &Pather, AudioDecoder &Decoder, AudioDevice &Device, const ma_device_data_proc &Callback) {
 	while (true) {
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	{
 			double currentTime = Buffer.GetGlobalFrameCount() / Decoder.GetDecoder().outputSampleRate;
 			double totalTime = Timer.GetTotalFrames() / Decoder.GetDecoder().outputSampleRate;
@@ -100,7 +102,7 @@ void AudioPlayer::NextFileCheck(AudioBuffering &Buffer, Status &Timer, Path &Pat
 			if (totalTime > 0 && currentTime >= totalTime) {
 				LOG_INFO("Player -> End of track, switching to next...");
 				Switch(Pather, Decoder, Device, Callback, Timer, Buffer, SwitchAction::NEXT);
-				// 重置计数器避免重复触发
+				// Reset Counters
 				currentTime = 0;
 				totalTime = 0;
 			}
@@ -115,7 +117,8 @@ void AudioPlayer::Clean(AudioBuffering &Buffer, Status& Timer , AudioDecoder &De
 	Buffer.ResetBuffer();
 }
 
-void AudioPlayer::Exit(ma_device &device, ma_decoder &decoder) {
-	ma_device_uninit(&device);
-	ma_decoder_uninit(&decoder);
+void AudioPlayer::Exit(AudioDevice &Device, AudioDecoder &Decoder) {
+	ma_device_stop(&Device.GetDevice());
+	ma_device_uninit(&Device.GetDevice());
+	ma_decoder_uninit(&Decoder.GetDecoder());
 }

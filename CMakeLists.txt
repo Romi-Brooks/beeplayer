@@ -19,6 +19,8 @@ add_executable(beeplayer miniaudio/miniaudio.c
         Log/LogSystem.hpp
         FileSystem/Path.cpp
         FileSystem/Path.hpp
+        Engine/DataCallback.cpp
+        Engine/DataCallback.hpp
 )
 
 # Static linking to exec file

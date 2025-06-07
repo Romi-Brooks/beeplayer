@@ -1,16 +1,17 @@
 /*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
- *  File Name: Status.cpp
+*  File Name: Status.cpp
  *  Lib: Beeplayer Core engine Progress Status
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: Core Engine
+ *  Type: Status, Core Engine
  */
 
-#include <iostream>
-#include <chrono>
-#include <thread>
-
 #include "Status.hpp"
+
+// Standard Lib
+#include <iomanip>
+#include <iostream>
+#include <thread>
 
 Status::Status(AudioDecoder &Decoder) {
 	SetFileLength(Decoder);
@@ -22,7 +23,7 @@ void Status::SetFileLength(AudioDecoder &Decoder) {
 	p_fileTotalFrames.store(temp_fileTotalFrames); // Store the file's total frames
 }
 
-void Status::ProgressThread(AudioDecoder &Decoder, AudioBuffering &Buffer) {
+void Status::ProgressThread(AudioDecoder &Decoder, AudioBuffering &Buffer) const {
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 		{
@@ -36,6 +37,7 @@ void Status::ProgressThread(AudioDecoder &Decoder, AudioBuffering &Buffer) {
 		}
 	}
 }
+
 void Status::ResetStatus(){
 	this->p_fileTotalFrames.store(0);
 }

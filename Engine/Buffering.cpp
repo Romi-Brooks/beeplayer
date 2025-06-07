@@ -3,11 +3,13 @@
  *  Lib: Beeplayer Core engine Audio Buffer -> Double buffering lib
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: Core Engine
+ *  Type: Buffers, Core Engine
  */
 
+// Standard Lib
 #include <mutex>
 
+// Basic Lib
 #include "Buffering.hpp"
 
 AudioBuffering::AudioBuffering(ma_decoder *decoder) {
@@ -24,17 +26,17 @@ AudioBuffering::~AudioBuffering() {
 void AudioBuffering::SwitchBuffer() { p_activeBuffer.store((p_activeBuffer.load() + 1) % 2); } // 切换缓冲区
 
 void AudioBuffering::ResetBuffer() {
-	// 停止填充线程
+	// Stop Filling thread
 	p_keepFilling = false;
 	if (p_bufferFillerThread.joinable()) {
 		p_bufferFillerThread.join();
 	}
 
-	// 重置播放计数器
+	// Reset the player count
 	p_globalFrameCount.store(0);
 	p_keepFilling = true;
 
-	// 重置缓冲状态
+	// Rest the buffer status
 	p_buffers[0].s_ready = false;
 	p_buffers[1].s_ready = false;
 	p_activeBuffer = 0;
@@ -50,8 +52,8 @@ void AudioBuffering::BufferFiller(ma_decoder *pDecoder) {
 			continue;
 		}
 
-		// 计算需要读取的帧数（示例：500ms的缓冲）
-		const ma_uint32 targetFrames = p_outputSampleRate * 0.7f;
+		// 计算需要读取的帧数
+		const ma_uint32 targetFrames = p_outputSampleRate * 0.5f;
 		p_buffers[nextBuffer].s_data.resize(targetFrames * ma_get_bytes_per_frame(pDecoder->outputFormat, pDecoder->outputChannels));
 
 		// 读取音频数据
@@ -69,7 +71,7 @@ void AudioBuffering::BufferFiller(ma_decoder *pDecoder) {
 			p_buffers[nextBuffer].s_ready = true;
 			nextBuffer = (nextBuffer + 1) % 2;
 		} else {
-			// 处理文件结束或错误
+			// Error something should be here...
 			break;
 		}
 	}

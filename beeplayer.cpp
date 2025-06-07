@@ -23,46 +23,7 @@
 #include "Engine/Status.hpp"
 #include "Log/LogSystem.hpp"
 #include "FileSystem/Path.hpp"
-
-
-
-// 修改后的回调函数
-void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
-	auto* buffering = static_cast<AudioBuffering*>(pDevice->pUserData);
-	static ma_uint64 consumedFrames = 0;
-
-	const int currentBufIdx = buffering->GetActiveBuffer();
-	AudioBuffering::Buffer& currentBuf = buffering->GetBuffers()[currentBufIdx];
-
-	if (!currentBuf.s_ready) {
-		memset(pOutput, 0, frameCount * ma_get_bytes_per_frame(pDevice->playback.format, pDevice->playback.channels));
-		return;
-	}
-
-	const ma_uint64 availableFrames = currentBuf.s_totalFrames - consumedFrames;
-	const ma_uint64 framesToCopy = std::min(static_cast<ma_uint64>(frameCount), availableFrames);
-
-	const size_t bytesToCopy = framesToCopy * ma_get_bytes_per_frame(pDevice->playback.format, pDevice->playback.channels);
-	memcpy(
-		pOutput,
-		currentBuf.s_data.data() + consumedFrames * ma_get_bytes_per_frame(pDevice->playback.format, pDevice->playback.channels),
-		bytesToCopy
-	);
-
-	consumedFrames += framesToCopy;
-	buffering->ConsumeFrames(framesToCopy);
-
-	if (consumedFrames >= currentBuf.s_totalFrames) {
-		currentBuf.s_ready = false;
-		buffering->SwitchBuffer();
-		consumedFrames = 0;
-	}
-
-	if (framesToCopy < frameCount) {
-		const size_t remainingBytes = (frameCount - framesToCopy) * ma_get_bytes_per_frame(pDevice->playback.format, pDevice->playback.channels);
-		memset(static_cast<char*>(pOutput) + bytesToCopy, 0, remainingBytes);
-	}
-}
+#include "Engine/DataCallback.hpp"
 
 // To provide the Listen Event can be Non-blocking.
 #ifdef _WIN32 // For windows platfrom Non-blocking input
@@ -91,7 +52,7 @@ void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDe
             std::cin >> key;
             switch (tolower(key)) {
                 case 'e': {
-                    Player.Exit(Device.GetDevice(),Decoder.GetDecoder());
+                    Player.Exit(Device,Decoder);
                     exit(0);
                 }
                 case 'p': {
@@ -160,10 +121,9 @@ int main(int argc, char** argv) {
 	Player.InitDevice(Decoder, Device, data_callback, DoubleBuffering); // 确保双缓冲被正确初始化，才能给到回调函数来获取信息
 	Status Timer(Decoder);
 
-	std::thread(&Status::ProgressThread, &Timer, std::ref(Decoder), std::ref(DoubleBuffering)).detach(); // Start the Time Counter Thread
+        std::thread(&Status::ProgressThread, &Timer, std::ref(Decoder), std::ref(DoubleBuffering)).detach(); // Start the Time Counter Thread
 	std::thread(&AudioPlayer::NextFileCheck, &Player, std::ref(DoubleBuffering), std::ref(Timer), std::ref(Pather), std::ref(Decoder), std::ref(Device), data_callback).detach();
-
-	Player.Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, DoubleBuffering); // init后，显式的一次调用
+	std::thread(&AudioPlayer::Play, &Player, std::ref(Device),std::ref(Decoder)).detach();
 
 	ListenEvent(Pather, Player, Device, Decoder, Timer, DoubleBuffering);
 
