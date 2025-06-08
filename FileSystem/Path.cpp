@@ -3,11 +3,14 @@
  *  Lib: Beeplayer Song List File System
  *  Author: Romi Brooks
  *  Date: 2025-04-24
- *  Type: FileSystem
+ *  Type: FileIterator FileSystem
  */
+
+// Standard Lib
 #include <algorithm>
 #include <iostream>
 
+// Basic Lib
 #include "Path.hpp"
 #include "../Log/LogSystem.hpp"
 

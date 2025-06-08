@@ -11,6 +11,7 @@
 #include <sstream>
 
 // Basic Lib
+#include "../FileSystem/Encoding.hpp"
 #include "../Log/LogSystem.hpp"
 
 ma_decoder& AudioDecoder::GetDecoder() {
@@ -18,12 +19,25 @@ ma_decoder& AudioDecoder::GetDecoder() {
 }
 
 void AudioDecoder::InitDecoder(const std::string &FilePath) {
-	ma_result result = ma_decoder_init_file(FilePath.c_str(), nullptr, &this->p_decoder);
+	ma_result result;
+	#ifdef _WIN32
+		if (Encoding::IsPureAscii(FilePath)) {
+			result = ma_decoder_init_file(FilePath.c_str(), nullptr, &this->p_decoder);
+		} else {
+			std::wstring widePath = Encoding::u8tou16(FilePath);
+			result = ma_decoder_init_file_w(widePath.c_str(), nullptr, &this->p_decoder);
+		}
+	#else
+		result = ma_decoder_init_file(FilePath.c_str(), nullptr, &this->p_decoder);
+	#endif
+
 	if (result != MA_SUCCESS) {
-		LOG_ERROR("miniaudo -> Error to loading the file:"  + FilePath);
+		LOG_ERROR("miniaudio -> Error loading file: " + FilePath);
+		return;
 	}
 	std::stringstream ss;
-	ss << "Audio Decoder -> Init Decoder Completed with file's sample rate: " << p_decoder.outputSampleRate << "Hz"
-			  << " and file format: " << p_decoder.outputFormat;
+	ss << "Audio Decoder -> Init completed. Sample rate: "
+	   << p_decoder.outputSampleRate << "Hz, Format: "
+	   << p_decoder.outputFormat;
 	LOG_INFO(ss.str());
 }

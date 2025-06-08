@@ -15,18 +15,19 @@
 #include <iostream>
 #include <cstring>
 
-#include "miniaudio/miniaudio.h"
 #include "Engine/Buffering.hpp"
+#include "Engine/DataCallback.hpp"
 #include "Engine/Decoder.hpp"
 #include "Engine/Device.hpp"
 #include "Engine/Player.hpp"
 #include "Engine/Status.hpp"
-#include "Log/LogSystem.hpp"
 #include "FileSystem/Path.hpp"
-#include "Engine/DataCallback.hpp"
+#include "Log/LogSystem.hpp"
+#include "miniaudio/miniaudio.h"
 
 // To provide the Listen Event can be Non-blocking.
-#ifdef _WIN32 // For windows platfrom Non-blocking input
+#ifdef _WIN32 // For windows platform Non-blocking input
+#include <windows.h>
 #include <conio.h>
 bool IsInputAvailable() {
     return _kbhit() != 0;
@@ -87,6 +88,9 @@ void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDe
 }
 
 int main(int argc, char** argv) {
+	#ifdef _WIN32
+		SetConsoleOutputCP(CP_UTF8);
+	#endif
 	std::string rootPath;
 	if (argc == 3) {
 		if (std::string(argv[1]) == "-root") {
