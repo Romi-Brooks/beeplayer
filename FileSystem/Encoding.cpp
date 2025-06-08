@@ -54,7 +54,7 @@ std::wstring Encoding::u8tou16(const std::string &u8)  {
 			utf16_buf.push_back(static_cast<uint16_t>(0xDC00 | (cp & 0x3FF)));
 		}
 	}
-	LOG_WARNING("Decoding -> Converted the File Name from u8 to u16!");
+	LOG_WARNING("Encoding -> Converted the File Name from u8 to u16!");
 	// 转换为wchar_t（自动适应平台）
 	return std::wstring(utf16_buf.begin(), utf16_buf.end());
 }

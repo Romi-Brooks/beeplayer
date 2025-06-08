@@ -20,7 +20,7 @@ void Path::InitSongList() {
 		auto iterator_opt = fs::directory_options::skip_permission_denied;
 		auto iterator_rec = fs::recursive_directory_iterator(p_root_path, iterator_opt);
 
-		for (const auto &file: iterator_rec) {
+		for (const auto &file : iterator_rec) {
 			try {
 				if (!file.is_regular_file())
 					continue;
@@ -30,7 +30,9 @@ void Path::InitSongList() {
 									   [](unsigned char c) { return std::tolower(c); });
 
 				if (extension == ".mp3" || extension == ".wav") {
-					p_song_names.push_back(file.path().filename().string());
+					// 关键修改：存储相对于根目录的相对路径
+					fs::path relative_path = fs::relative(file.path(), p_root_path);
+					p_song_names.push_back(relative_path.generic_string()); // 使用通用格式路径分隔符
 				}
 			} catch (...) {
 				// Skip File Error
@@ -40,6 +42,7 @@ void Path::InitSongList() {
 		// Skip Folder Error
 	}
 }
+
 Path::Path(const std::string &root) : p_root_path(root) {
 	LOG_INFO("Pather -> Set Root Path: " + root);
 	InitSongList();
@@ -50,6 +53,7 @@ std::string Path::NextFilePath() {
 		return "";
 
 	p_current_index = (p_current_index + 1) % p_song_names.size();
+	// 拼接完整路径（自动处理路径分隔符）
 	return (p_root_path / p_song_names[p_current_index]).string();
 }
 
@@ -66,6 +70,7 @@ std::string Path::CurrentFilePath() const {
 		return "";
 	return (p_root_path / p_song_names[p_current_index]).string();
 }
+
 
 std::string Path::GetFileName(const std::string &path) { return fs::path(path).filename().string(); }
 

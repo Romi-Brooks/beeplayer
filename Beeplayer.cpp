@@ -16,7 +16,9 @@
 #include <mutex>
 #include <vector>
 #include <string>
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 // ImGUI Init
 #include "GUI/UI.hpp"
@@ -29,6 +31,7 @@
 int main(int argc, char** argv) {
 	#ifdef _WIN32
 		SetConsoleOutputCP(CP_UTF8);
+		LOG_WARNING("WinMarco -> Set the code page to CP_UTF8");
 	#endif
 	// Global Audio Player Controller
 	MusicPlayerState PlayerState;

@@ -32,7 +32,7 @@ UI::UI(MusicPlayerState &state)  : playerState(state) {
 	window = glfwCreateWindow(800, 600, "BeePlayer", nullptr, nullptr);
 	if (!window) {
 		glfwTerminate();
-		throw std::runtime_error("Failed to create GLFW window");
+		LOG_ERROR("GLFW -> Failed to create GLFW window");
 	}
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1); // 启用垂直同步
@@ -55,15 +55,15 @@ UI::~UI()  {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-	LOG_INFO("Exiting IMGUI&GLFW");
+	LOG_INFO("ImGUI -> Exiting IMGUI&GLFW");
 
 	if (window) {
 		glfwDestroyWindow(window);
 	}
-	LOG_INFO("Destroy Window");
+	LOG_INFO("GLFW Render -> Destroy Window");
 
 	glfwTerminate();
-	LOG_INFO("glfwTerminate...");
+	LOG_INFO("GLFW Render -> glfwTerminate...");
 
 	if (playerState.initialized) {
 		std::lock_guard<std::mutex> lock(playerState.audioMutex);
@@ -72,7 +72,7 @@ UI::~UI()  {
 		playerState.progress = 0.0f;
 		playerState.isPlaying = false;
 	}
-	LOG_INFO("Stop Player State");
+	LOG_INFO("Player State -> Stop Player State");
 
 	exit(0);
 }
