@@ -43,10 +43,14 @@ add_executable(beeplayer
         Engine/DataCallback.hpp
         Log/LogSystem.cpp
         FileSystem/Path.cpp
+        FileSystem/Path.hpp
+        FileSystem/Encoding.cpp
+        FileSystem/Encoding.hpp
 #       GUI Provided
         ${IMGUI_SRCS}
         GUI/UI.cpp
         GUI/UI.hpp
+
 )
 
 # 设置静态链接选项

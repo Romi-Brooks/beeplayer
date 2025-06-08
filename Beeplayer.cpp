@@ -16,16 +16,20 @@
 #include <mutex>
 #include <vector>
 #include <string>
+#include <windows.h>
 
 // ImGUI Init
 #include "GUI/UI.hpp"
 
 // Basic Lib
 #include "Engine/MusicPlayerState.hpp"
-#include "Log/LogSystem.hpp"
 #include "FileSystem/Path.hpp"
+#include "Log/LogSystem.hpp"
 
 int main(int argc, char** argv) {
+	#ifdef _WIN32
+		SetConsoleOutputCP(CP_UTF8);
+	#endif
 	// Global Audio Player Controller
 	MusicPlayerState PlayerState;
 

@@ -17,10 +17,10 @@
 std::string GetLogLevel(const LogLevel& LogLevel) {
     std::string LevelStr;
     switch (LogLevel) {
-        case INFO: LevelStr = "INFO"; break;
-        case WARNING: LevelStr = "WARNING"; break;
-        case ERROR: LevelStr = "ERROR"; break;
-        case DEBUG: LevelStr = "DEBUG"; break;
+        case BP_INFO: LevelStr = "INFO"; break;
+        case BP_WARNING: LevelStr = "WARNING"; break;
+        case BP_ERROR: LevelStr = "ERROR"; break;
+        case BP_DEBUG: LevelStr = "DEBUG"; break;
     }
     return LevelStr;
 }
