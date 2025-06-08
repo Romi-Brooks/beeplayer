@@ -90,6 +90,7 @@ void ListenEvent(Path& Pather, AudioPlayer& Player, AudioDevice& Device, AudioDe
 int main(int argc, char** argv) {
 	#ifdef _WIN32
 		SetConsoleOutputCP(CP_UTF8);
+		LOG_WARNING("WinMarco -> Set the code page to CP_UTF8");
 	#endif
 	std::string rootPath;
 	if (argc == 3) {

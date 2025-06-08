@@ -26,7 +26,7 @@ void AudioPlayer::Play(AudioDevice& Device, AudioDecoder& Decoder) const {
 		ma_decoder_uninit(&Decoder.GetDecoder());
 	}
 
-	LOG_INFO("Audio Player-> Now Playing: " + this->GetName());
+	LOG_INFO("Audio Player -> Now Playing: " + this->GetName());
 }
 
 void AudioPlayer::InitDecoder(const Path & Pather, AudioDecoder& Decoder) {
@@ -45,21 +45,21 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 	switch (SwitchCode) {
 		// Set To the next file.
 		case SwitchAction::NEXT: {
-			LOG_INFO("Audio Player-> Switch Next!");
+			LOG_INFO("Audio Player -> Switch Next!");
 			Pather.NextFilePath();
 			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
 		// Set To the previous file.
 		case SwitchAction::PREV: {
-			LOG_INFO("Audio Player-> Switch Pre!");
+			LOG_INFO("Audio Player -> Switch Pre!");
 			Pather.PrevFilePath();
 			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
 		case SwitchAction::SPECIFIC:
 			// using for Switch the specific index's song (aka: user's choice in ui)
-			LOG_INFO("Audio Player-> Jump To Selected!");
+			LOG_INFO("Audio Player -> Jump To Selected!");
 			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		default: {
@@ -72,14 +72,14 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 
 	// First: Init the Decoder From the file
 	Decoder.InitDecoder(Pather.CurrentFilePath());
-	LOG_INFO("Audio Player-> Device init completed.");
+	LOG_INFO("Audio Player -> Device init completed.");
 
 	// Second: Init the Device to make sure there is a device to play the audio
 	Device.InitDeviceConfig(Decoder.GetDecoder().outputSampleRate, Decoder.GetDecoder().outputFormat, Callback,
 							Decoder.GetDecoder(), &Buffer);
 	Device.InitDevice(Decoder.GetDecoder());
 	Timer.SetFileLength(Decoder); // reset the file length
-	LOG_INFO("Audio Player-> Device init completed.");
+	LOG_INFO("Audio Player -> Device init completed.");
 
 	// Rerun the double buffering progress
 	Buffer.GetBufferThread() = std::thread(&AudioBuffering::BufferFiller, &Buffer, &Decoder.GetDecoder());
