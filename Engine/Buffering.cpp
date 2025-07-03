@@ -6,23 +6,24 @@
  *  Type: Buffers, Core Engine
  */
 
+#include "Buffering.hpp"
+
 // Standard Lib
 #include <mutex>
-
-// Basic Lib
-#include "Buffering.hpp"
 
 AudioBuffering::AudioBuffering(ma_decoder *decoder) {
 	p_outputSampleRate = decoder->outputSampleRate;
 	p_keepFilling = true;
 	p_bufferFillerThread = std::thread(&AudioBuffering::BufferFiller, this, decoder);
 }
+
 AudioBuffering::~AudioBuffering() {
 	p_keepFilling.store(false);
 	if (p_bufferFillerThread.joinable()) {
 		p_bufferFillerThread.join();
 	}
 }
+
 void AudioBuffering::SwitchBuffer() { p_activeBuffer.store((p_activeBuffer.load() + 1) % 2); } // 切换缓冲区
 
 void AudioBuffering::ResetBuffer() {
@@ -48,7 +49,7 @@ void AudioBuffering::BufferFiller(ma_decoder *pDecoder) {
 	while (p_keepFilling) {
 		// 等待当前缓冲区消耗过半再填充
 		if (p_buffers[nextBuffer].s_ready) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			continue;
 		}
 

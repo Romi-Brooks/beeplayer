@@ -8,13 +8,13 @@
 #include "DataCallback.hpp"
 
 // Standard Lib
-#include <string.h>
+#include <cstring>
 
 // Basic Lib
 #include "../miniaudio/miniaudio.h"
 #include "Buffering.hpp"
+#include "Controller.hpp"
 #include "Decoder.hpp"
-#include "MusicPlayerState.hpp"
 
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
 	auto* buffering = static_cast<AudioBuffering*>(pDevice->pUserData);

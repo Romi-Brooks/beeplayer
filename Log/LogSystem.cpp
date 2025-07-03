@@ -6,47 +6,65 @@
  *  Type: I/O, LOG System
  */
 
-#include <string>
-#include <iostream>
-#include <mutex>
-#include <chrono>
-
 #include "LogSystem.hpp"
 
-// Foward Function
-std::string GetLogLevel(const LogLevel& LogLevel) {
-    std::string LevelStr;
-    switch (LogLevel) {
-        case BP_INFO: LevelStr = "INFO"; break;
-        case BP_WARNING: LevelStr = "WARNING"; break;
-        case BP_ERROR: LevelStr = "ERROR"; break;
-        case BP_DEBUG: LevelStr = "DEBUG"; break;
-    }
-    return LevelStr;
+// Standard Lib
+#include <string>
+#include <mutex>
+#include <chrono>
+#include <ctime>
+
+
+// Forward Function
+std::string Log::GetLogLevelName(const LogLevel Level) {
+	switch (Level) {
+		case BP_INFO: return "INFO";
+		case BP_WARNING: return "WARNING";
+		case BP_ERROR: return "ERROR";
+		case BP_DEBUG: return "DEBUG";
+		default: return "Unknown Level";
+	}
 }
-auto GetCurrentTime() {
-    /* After You review this code:
-     * std::chrono: 是 C++ 中用于处理时间的库, 提供了各种时间相关的功能
-     * system_clock: 是 std::chrono 库中的一种时钟, 表示系统时间(即计算机的操作系统时间)
-     * now(): 是 system_clock 的一个静态成员函数, 用于获取当前时间点
-     * time_point: 是 std::chrono 库中表示时间点的类型, 表示从某个 epoch(通常是指 1970 年 1 月 1 日 00:00:00 UTC)开始的时间点 */
 
-    /* The Function: std::chrono::system_clock::now()
-     * 是 C++ 标准库中用于获取当前时间的函数。
-     * 它返回一个 std::chrono::system_clock::time_point 类型的对象 */
-    const auto Time = std::chrono::system_clock::now();
+std::string Log::GetLogChannelName(const LogChannel Channel) {
+	switch (Channel) {
+		case CH_MINIAUDIO: return "Miniaudio";
+		case CH_BUFFERING: return  "Buffering";
+		case CH_DECODER: return "Decoder";
+		case CH_DEVICE: return "Device";
+		case CH_CONTROLLER: return "Controller";
+		case CH_PLAYER: return "Player";
+		case CH_STATUS: return "Status";
+		case CH_ENCODING: return "Encoding";
+		case CH_PATH: return "Pather";
+		case CH_IMGUI: return "ImGui";
+		case CH_GLFW: return "GLFW";
+		case CH_LOG: return "Logger";
+		case CH_DEBUG: return "Debugger";
+		default: return "Unknown Channel";
+	}
+}
 
-    /* The Function: std::chrono::system_clock::to_time_t(now)
-     * 是将 std::chrono::system_clock::time_point 类型的时间点转换为 time_t 类型
-     * time_t 是 C 和 C++ 中表示时间的类型, 通常是一个整数, 表示从 1970 年 1 月 1 日 00:00:00 UTC 开始的秒数(即 Unix 时间戳) */
-    auto TimeT = std::chrono::system_clock::to_time_t(Time);
+std::string Log::GetCurrentLogTime() {
+	auto now = std::chrono::system_clock::now();
+	auto in_time_t = std::chrono::system_clock::to_time_t(now);
 
-    /* std::stringstream: 是 C++ 中用于字符串流操作的类, 允许像操作 I/O 流一样操作字符串
-     * std::put_time: 是一个格式化时间的函数, 用于将时间格式化为字符串
-     * std::localtime(&TimeT): 是 C 标准库中的函数, 用于将 time_t 类型的时间转换为本地时间的 tm 结构 */
-    std::stringstream TimeString;
-    TimeString << std::put_time(std::localtime(&TimeT), "%Y-%m-%d %X");
-    return TimeString;
+	// 线程安全的时间转换
+	struct tm tm_buf{};
+#if defined(_WIN32)
+	localtime_s(&tm_buf, &in_time_t);  // Windows
+#else
+	localtime_r(&in_time_t, &tm_buf);  // Linux/MacOS
+#endif
+
+	// 添加毫秒精度
+	auto since_epoch = now.time_since_epoch();
+	auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(since_epoch).count() % 1000;
+
+	char buffer[80];
+	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &tm_buf);
+
+	return std::string(buffer) + '.' + std::to_string(millis);
 }
 
 Log& Log::GetLogInstance() {
@@ -54,13 +72,8 @@ Log& Log::GetLogInstance() {
     return LogInstance;
 }
 
-void Log::LogOut(const std::string& I_LogMessage, LogLevel I_Level) {
-    std::lock_guard<std::mutex> lock(GetLogInstance().LogMutex);
-
-    std::string FullLogMessage = "[" + GetCurrentTime().str() + "] [" + GetLogLevel(I_Level) + "] " + I_LogMessage;
-    std::cout << FullLogMessage << std::endl;
+void Log::SetViewLogLevel(LogLevel Level) {
+	LogOut(LogLevel::BP_WARNING, LogChannel::CH_LOG, "Set The Log Level to ", GetLogLevelName(Level));
+    GetLogInstance().ViewLogLevel = Level;
 }
 
-void Log::SetViewLogLevel(LogLevel I_Level) {
-    GetLogInstance().ViewLogLevel = I_Level;
-}

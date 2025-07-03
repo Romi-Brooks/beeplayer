@@ -18,7 +18,6 @@
 class AudioDecoder {
     public:
         AudioDecoder() : p_decoder{} {}
-
         ma_decoder& GetDecoder();
 
         void InitDecoder(const std::string& FilePath);
@@ -26,5 +25,4 @@ class AudioDecoder {
     private:
         ma_decoder p_decoder;
 };
-
 #endif //DECODER_HPP

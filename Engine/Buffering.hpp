@@ -28,20 +28,23 @@ class AudioBuffering {
 
 	    explicit AudioBuffering(ma_decoder *decoder);
 
+	    ~AudioBuffering();
+
 		void BufferFiller(ma_decoder* pDecoder);
 
-	    ~AudioBuffering();
+		// Getter
 		Buffer* GetBuffers() { return p_buffers; }
 		std::thread& GetBufferThread() { return p_bufferFillerThread; }
 		int GetActiveBuffer() const { return p_activeBuffer.load(); }
 		ma_uint64 GetGlobalFrameCount() const { return p_globalFrameCount.load(); }
 		ma_uint32 GetOutputSampleRate() const { return p_outputSampleRate; }
+
+		void SwitchBuffer();
 		void ConsumeFrames(ma_uint64 frames) { p_globalFrameCount += frames; }
 
 		void SetGlobalFrameCount(ma_uint64 frames) { p_globalFrameCount.store(frames); }
 		void SetOutputSampleRate(ma_uint32 rate) { p_outputSampleRate = rate; }
 
-		void SwitchBuffer();
 		void ResetBuffer();
 
 	private:

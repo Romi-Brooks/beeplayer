@@ -12,6 +12,13 @@
 // Basic Lib
 #include "../miniaudio/miniaudio.h"
 
+// Basic callback function, I wrote it using the template provided by miniaudio
+// ref: https://miniaud.io/docs/examples/simple_playback.html
+
+// Note: We don't enforce BeePlayer's code naming style for all features related to
+// the basic work of the miniaudio library,
+// but we should try to follow the outer wrappers
+
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
 
 #endif //DATACALLBACK_HPP

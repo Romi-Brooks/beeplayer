@@ -8,10 +8,6 @@
 
 #include "Device.hpp"
 
-// Standard Lib
-#include <iostream>
-#include <sstream>
-
 // Basic Lib
 #include "../Log/LogSystem.hpp"
 
@@ -33,16 +29,14 @@ void AudioDevice::InitDeviceConfig(const ma_uint32 &SampleRate, const ma_format 
     p_deviceConfig.pUserData         = DoubleBuffering;   // Can be accessed from the device object (device.pUserData).
 
 	// LOG_INFO("Audio Device -> Device Config Initialized.");
-	std::stringstream ss;
-	ss << "Audio Device -> Init Device Completed with device's sample rate: " << p_deviceConfig.sampleRate << "Hz"
-	   << " and device format: " << p_deviceConfig.playback.format;
-	LOG_INFO(ss.str());
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_DEVICE, "Set Config completed with Sample rate: ", p_deviceConfig.sampleRate,
+									"Hz, Format: ", p_deviceConfig.playback.format);
 }
 
 void AudioDevice::InitDevice(ma_decoder &Decoder) {
     if (ma_device_init(nullptr, &this->p_deviceConfig, &p_device) != MA_SUCCESS) {
-    	LOG_ERROR("miniaudio -> Error to init the Device.");
+    	Log::LogOut(LogLevel::BP_ERROR, LogChannel::CH_DEVICE, "Error to init the Device.");
         ma_decoder_uninit(&Decoder); // For Safety
     }
-	LOG_INFO("Audio Device -> Device Initialized.");
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_DEVICE, "Initialized.");
 }

@@ -9,7 +9,6 @@
 #include "Player.hpp"
 
 // Standard Lib
-#include <iostream>
 #include <thread>
 
 // Basic Lib
@@ -19,17 +18,28 @@
 #include "../FileSystem/Path.hpp"
 
 
-void AudioPlayer::Play(ma_device &Device, ma_decoder &Decoder, Status& Timer, AudioBuffering& Buffer) const {
-	if (ma_device_start(&Device) != MA_SUCCESS) {
-		LOG_ERROR("miniaudio -> Error when play the file.");
-		ma_device_uninit(&Device);
-		ma_decoder_uninit(&Decoder);
+void AudioPlayer::Play(AudioDevice &Device, AudioDecoder &Decoder, Status &Timer, AudioBuffering &Buffer) const {
+	if (ma_device_start(&Device.GetDevice()) != MA_SUCCESS) {
+		Log::LogOut(LogLevel::BP_ERROR, LogChannel::CH_PLAYER, "Error when play the file.");
+		ma_device_uninit(&Device.GetDevice());
+		ma_decoder_uninit(&Decoder.GetDecoder());
 	}
 
-	LOG_INFO("Audio Player -> Now Playing: " + this->GetName());
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Now Playing: ", this->GetName());
+}
+void AudioPlayer::StopActions(AudioDevice &Device) {
+	if (ma_device_is_started(&Device.GetDevice())) {
+		ma_device_stop(&Device.GetDevice());
+	} else {
+		ma_device_start(&Device.GetDevice());
+	}
 }
 
-void AudioPlayer::InitDecoder(const Path & Pather, AudioDecoder& Decoder) {
+void AudioPlayer::Seek(AudioDecoder &Decoder,ma_uint64 FrameIndex) {
+	ma_decoder_seek_to_pcm_frame(&Decoder.GetDecoder(),FrameIndex);
+}
+
+void AudioPlayer::InitDecoder(const Path& Pather, AudioDecoder& Decoder) {
 	Decoder.InitDecoder(Pather.CurrentFilePath());
 	SetName(Path::GetFileName(Pather.CurrentFilePath()));
 }
@@ -45,21 +55,21 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 	switch (SwitchCode) {
 		// Set To the next file.
 		case SwitchAction::NEXT: {
-			LOG_INFO("Audio Player -> Switch Next!");
+			Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Switch Next!");
 			Pather.NextFilePath();
 			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
 		// Set To the previous file.
 		case SwitchAction::PREV: {
-			LOG_INFO("Audio Player -> Switch Pre!");
+			Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Switch Pre!");
 			Pather.PrevFilePath();
 			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		}
 		case SwitchAction::SPECIFIC:
 			// using for Switch the specific index's song (aka: user's choice in ui)
-			LOG_INFO("Audio Player -> Jump To Selected!");
+			Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Jump To Selected!");
 			SetName(Path::GetFileName(Pather.CurrentFilePath()));
 			break;
 		default: {
@@ -72,44 +82,25 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 
 	// First: Init the Decoder From the file
 	Decoder.InitDecoder(Pather.CurrentFilePath());
-	LOG_INFO("Audio Player -> Device init completed.");
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Reinit Decoder completed.");
 
 	// Second: Init the Device to make sure there is a device to play the audio
 	Device.InitDeviceConfig(Decoder.GetDecoder().outputSampleRate, Decoder.GetDecoder().outputFormat, Callback,
 							Decoder.GetDecoder(), &Buffer);
 	Device.InitDevice(Decoder.GetDecoder());
-	Timer.SetFileLength(Decoder); // reset the file length
-	LOG_INFO("Audio Player -> Device init completed.");
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Reinit the Device completed.");
 
-	// Rerun the double buffering progress
+	// Rerun the Time Counter and double buffering progress
+	Timer.SetFileLength(Decoder); // reset the file length
 	Buffer.GetBufferThread() = std::thread(&AudioBuffering::BufferFiller, &Buffer, &Decoder.GetDecoder());
-	LOG_INFO("Buffer Thread -> Rerun the double buffering progress.");
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Rerun the double buffering progress.");
 
 	// Third: Just Playing the file from decoder and device
-	Play(Device.GetDevice(), Decoder.GetDecoder(), Timer, Buffer);
-	LOG_INFO("Audio Player -> Start Playing.");
-
+	Play(Device, Decoder, Timer, Buffer);
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Start Playing.");
 }
 
-// This Function is using for switch the song, when the file is play done.
-void AudioPlayer::NextFileCheck(AudioBuffering &Buffer, Status &Timer, Path &Pather, AudioDecoder &Decoder, AudioDevice &Device, const ma_device_data_proc &Callback) {
-	while (true) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	{
-			double currentTime = Buffer.GetGlobalFrameCount() / Decoder.GetDecoder().outputSampleRate;
-			double totalTime = Timer.GetTotalFrames() / Decoder.GetDecoder().outputSampleRate;
-			// std::cout << "Timer Checker -> Current Time/Total Time:" << currentTime << "/" << totalTime << std::endl; // Debugger
-			if (totalTime > 0 && currentTime >= totalTime) {
-				LOG_INFO("Player -> End of track, switching to next...");
-				Switch(Pather, Decoder, Device, Callback, Timer, Buffer, SwitchAction::NEXT);
-				// Reset Counters
-				currentTime = 0;
-				totalTime = 0;
-			}
-		}
-	}
-}
-
+// This function write for switch actions,
 void AudioPlayer::Clean(AudioBuffering &Buffer, Status& Timer , AudioDecoder &Decoder, AudioDevice &Device){
 	ma_device_uninit(&Device.GetDevice());
 	ma_decoder_uninit(&Decoder.GetDecoder());
@@ -117,6 +108,7 @@ void AudioPlayer::Clean(AudioBuffering &Buffer, Status& Timer , AudioDecoder &De
 	Buffer.ResetBuffer();
 }
 
+// If the exec will be exited, try to this function call
 void AudioPlayer::Exit(AudioDevice &Device, AudioDecoder &Decoder) {
 	ma_device_stop(&Device.GetDevice());
 	ma_device_uninit(&Device.GetDevice());

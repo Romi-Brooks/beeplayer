@@ -8,13 +8,12 @@
 #include "Decoder.hpp"
 
 // Standard Lib
-#include <sstream>
 
 // Basic Lib
-#include "../Log/LogSystem.hpp"
 #include "../FileSystem/Encoding.hpp"
+#include "../Log/LogSystem.hpp"
 
-ma_decoder& AudioDecoder::GetDecoder() {
+ma_decoder & AudioDecoder::GetDecoder() {
     return this->p_decoder;
 }
 
@@ -30,14 +29,10 @@ void AudioDecoder::InitDecoder(const std::string &FilePath) {
 #else
 	result = ma_decoder_init_file(FilePath.c_str(), nullptr, &this->p_decoder);
 #endif
-
+	
 	if (result != MA_SUCCESS) {
-		LOG_ERROR("miniaudio -> Error loading file: " + FilePath);
+		Log::LogOut(LogLevel::BP_ERROR, LogChannel::CH_DECODER, "Error loading file: " , FilePath);
 		return;
 	}
-	std::stringstream ss;
-	ss << "Audio Decoder -> Init completed. Sample rate: "
-	   << p_decoder.outputSampleRate << "Hz, Format: "
-	   << p_decoder.outputFormat;
-	LOG_INFO(ss.str());
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_DECODER, "Init completed with Sample rate: ", p_decoder.outputSampleRate, "Hz, Format: ", p_decoder.outputFormat);
 }

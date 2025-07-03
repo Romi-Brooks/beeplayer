@@ -22,6 +22,7 @@ bool Encoding::IsPureAscii(const std::string &FileName) {
 	}
 	return true;
 }
+
 std::wstring Encoding::u8tou16(const std::string &u8)  {
 	std::vector<uint16_t> utf16_buf; // 存储UTF-16代码单元
 	for (size_t i = 0; i < u8.size();) {
@@ -42,7 +43,7 @@ std::wstring Encoding::u8tou16(const std::string &u8)  {
 			cp = (lead & 0x07) << 18 | (u8[i+1] & 0x3F) << 12 | (u8[i+2] & 0x3F) << 6 | (u8[i+3] & 0x3F);
 			i += 4;
 		} else {
-			LOG_ERROR("Encoding -> Error UTF-8 Sequence.");
+			Log::LogOut(LogLevel::BP_ERROR, LogChannel::CH_ENCODING, "Error UTF-8 Sequence for file name: ", u8 );
 		}
 
 		// 转换为UTF-16
@@ -54,7 +55,7 @@ std::wstring Encoding::u8tou16(const std::string &u8)  {
 			utf16_buf.push_back(static_cast<uint16_t>(0xDC00 | (cp & 0x3FF)));
 		}
 	}
-	LOG_WARNING("Encoding -> Converted the File Name from u8 to u16!");
+	Log::LogOut(LogLevel::BP_WARNING, LogChannel::CH_ENCODING, "Converted the file:", u8, " from u8 to u16!");
 	// 转换为wchar_t（自动适应平台）
-	return std::wstring(utf16_buf.begin(), utf16_buf.end());
+	return std::basic_string<wchar_t>(utf16_buf.begin(), utf16_buf.end());
 }

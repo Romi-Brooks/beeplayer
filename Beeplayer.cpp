@@ -1,3 +1,4 @@
+
 /*
  *  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *
@@ -5,17 +6,18 @@
  *  A lightweight and cross-platform music player based on miniaudio and C++.
  *
  *  Thanks to David Reid provided us a such powerful and useful lib "miniaudio"
+ *	Thanks to Omar Cornut provided us a lightweight and simple GUI Lib "Dear ImGUI"
+ *	And I use GLFW + OpenGL for the backend
  *
  *  Thanks to music make the world so beautiful. :)
- *  and happy Children's Day - pub on 6-1-2025
  */
 
 // Standard Lib
 #include <iostream>
 #include <thread>
-#include <mutex>
-#include <vector>
 #include <string>
+#include <complex>
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -24,51 +26,31 @@
 #include "GUI/UI.hpp"
 
 // Basic Lib
-#include "Engine/MusicPlayerState.hpp"
+#include "Engine/Controller.hpp"
 #include "FileSystem/Path.hpp"
 #include "Log/LogSystem.hpp"
 
 int main(int argc, char** argv) {
+	Log::SetViewLogLevel(LogLevel::BP_INFO);
+
 	#ifdef _WIN32
 		SetConsoleOutputCP(CP_UTF8);
-		LOG_WARNING("WinMarco -> Set the code page to CP_UTF8");
+		Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_LOG, "Set the code page to CP_UTF8");
 	#endif
-	// Global Audio Player Controller
-	MusicPlayerState PlayerState;
 
 	try {
-		// give me an ui entity
-		UI gui(PlayerState);
+		PlayerController playerController;
+		UI gui(playerController);
 
-		// Get the Music path
 		std::string rootPath;
 		if (argc == 3 && std::string(argv[1]) == "-root") {
 			rootPath = argv[2];
-		} else {
-			// Render File Selector
-			rootPath = gui.ShowPathSelection();
 		}
 
-		// If close the window and selected no path
-		if (rootPath.empty() && glfwWindowShouldClose(gui.GetWindow())) {
-			return 0;
-		}
-
-		// Init the Music Player
-		if (!rootPath.empty() && !InitializeAudioPlayer(PlayerState, rootPath)) {
-			LOG_ERROR("PlayerState -> Can not Init the Audio Player!");
-			return 1;
-		}
-
-		// 运行主界面
-		gui.Run();
+		gui.Run(rootPath);
 	} catch (const std::exception& e) {
-		std::stringstream ss;
-		ss << "PlayerState - > Error when load path: " << e.what() << std::endl;
-		LOG_ERROR(ss.str());
-		return 1;
+		Log::LogOut(LogLevel::BP_ERROR, LogChannel::CH_DEBUG, "Unknown Error:" , e.what());
 	}
-
 
 	return 0;
 }

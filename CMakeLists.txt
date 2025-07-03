@@ -37,8 +37,8 @@ add_executable(beeplayer
         Engine/Player.cpp
         Engine/Buffering.cpp
         Engine/Status.cpp
-        Engine/MusicPlayerState.cpp
-        Engine/MusicPlayerState.hpp
+        Engine/Controller.cpp
+        Engine/Controller.hpp
         Engine/DataCallback.cpp
         Engine/DataCallback.hpp
         Log/LogSystem.cpp
