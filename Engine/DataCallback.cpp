@@ -5,6 +5,7 @@
  *  Date: 2025-06-1
  *  Type: Functions, Core Engine
  */
+
 #include "DataCallback.hpp"
 
 // Standard Lib
@@ -14,7 +15,6 @@
 #include "../miniaudio/miniaudio.h"
 #include "Buffering.hpp"
 #include "Controller.hpp"
-#include "Decoder.hpp"
 
 void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) {
 	auto* buffering = static_cast<AudioBuffering*>(pDevice->pUserData);

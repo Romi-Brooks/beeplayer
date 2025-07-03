@@ -1,3 +1,11 @@
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
+ *  File Name: Controller.cpp
+ *  Lib: Beeplayer Core engine Provided the Public Wrapper interface
+ *  Author: Romi Brooks
+ *  Date: 2025-07-03
+ *  Type: Controller, Core Engine, Wrapper, Interface
+ */
+
 #include "Controller.hpp"
 #include "../Engine/DataCallback.hpp"
 #include "../Log/LogSystem.hpp"

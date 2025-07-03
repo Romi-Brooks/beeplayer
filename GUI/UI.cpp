@@ -1,12 +1,23 @@
-#include "UI.hpp"
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
+ *  File Name: UI.cpp
+ *  Lib: Beeplayer UI Provider with Dear ImGUI
+ *  Author: Romi Brooks
+ *  Date: 2025-07-03
+ *  Type: GUI, Wrapper, UI
+ */
 
+
+#include "UI.hpp"
+// Standard Lib
 #include <iostream>
 #include <vector>
 #include <cstring>
 
+// ImGUI Init
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+// Basic Lib
 #include "../Log/LogSystem.hpp"
 
 UI::UI(PlayerController& controller) : playerController(controller) {

@@ -1,6 +1,14 @@
+/*  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
+ *  File Name: Controller.hpp
+ *  Lib: Beeplayer Core engine Provided the Public Wrapper interface definitions
+ *  Author: Romi Brooks
+ *  Date: 2025-07-03
+ *  Type: Controller, Core Engine, Wrapper, Interface
+ */
 #ifndef MUSICPLAYERSTATE_HPP
 #define MUSICPLAYERSTATE_HPP
 
+// Standard Lib
 #include <vector>
 #include <string>
 #include <atomic>

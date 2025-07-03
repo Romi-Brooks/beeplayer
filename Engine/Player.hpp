@@ -9,15 +9,11 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+
 // Basic Lib
-#include <functional>
-#include <utility>
-
-
 #include "Decoder.hpp"
 #include "Device.hpp"
 #include "Status.hpp"
-
 #include "../FileSystem/Path.hpp"
 
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the

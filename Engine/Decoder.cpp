@@ -5,6 +5,7 @@
  *  Date: 2025-04-22
  *  Type: Decoder, Core Engine
  */
+
 #include "Decoder.hpp"
 
 // Standard Lib

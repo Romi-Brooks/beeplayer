@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (c) 2025 Romi Brooks <qq1694821929@gmail.com>
  *
@@ -18,6 +17,7 @@
 #include <string>
 #include <complex>
 
+// Mult-Platform Definition
 #ifdef _WIN32
 #include <windows.h>
 #endif
