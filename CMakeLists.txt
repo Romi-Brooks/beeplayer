@@ -12,6 +12,7 @@ include_directories(
         imgui/glfw/include
         imgui
         imgui/backends
+        GUI/stb_img/
         miniaudio
         Engine
         Log
@@ -23,6 +24,10 @@ file(GLOB_RECURSE IMGUI_SRCS
         "imgui/*.cpp"
         "imgui/backends/imgui_impl_glfw.cpp"
         "imgui/backends/imgui_impl_opengl3.cpp"
+)
+# 收集源文件
+file(GLOB_RECURSE STB_SRCS
+        "GUI/stb_img/stb_image.c"
 )
 
 # 添加可执行文件
@@ -48,6 +53,7 @@ add_executable(beeplayer
         FileSystem/Encoding.hpp
 #       GUI Provided
         ${IMGUI_SRCS}
+        ${STB_SRCS}
         GUI/UI.cpp
         GUI/UI.hpp
 

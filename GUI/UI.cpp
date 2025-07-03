@@ -6,7 +6,6 @@
  *  Type: GUI, Wrapper, UI
  */
 
-
 #include "UI.hpp"
 // Standard Lib
 #include <iostream>
@@ -19,6 +18,11 @@
 
 // Basic Lib
 #include "../Log/LogSystem.hpp"
+
+// Icon Loader
+#include "icon/Beeplayer.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "./stb_img/stb_image.h"
 
 UI::UI(PlayerController& controller) : playerController(controller) {
     // 初始化GLFW
@@ -35,6 +39,21 @@ UI::UI(PlayerController& controller) : playerController(controller) {
     }
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // 启用垂直同步
+
+	// 从内存加载图标
+	int width, height, channels;
+	unsigned char* pixels = stbi_load_from_memory(
+		Beeplayer_Icon, Beeplayer_Icon_Size, &width, &height, &channels, 4);
+
+	if (pixels) {
+		// 设置窗口图标
+		GLFWimage icon;
+		icon.width = width;
+		icon.height = height;
+		icon.pixels = pixels;
+		glfwSetWindowIcon(window, 1, &icon);
+		stbi_image_free(pixels);
+	}
 
     // 初始化ImGui
     IMGUI_CHECKVERSION();
