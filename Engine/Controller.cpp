@@ -110,8 +110,8 @@ void PlayerController::NextFileCheckThread() {
 
 			// 检查歌曲是否结束
 			if (Timer && Decoder && Buffer) {
-				double currentTime = Buffer->GetGlobalFrameCount() / Decoder->GetDecoder().outputSampleRate;
-				double totalTime = Timer->GetTotalFrames() / Decoder->GetDecoder().outputSampleRate;
+				const auto currentTime = Buffer->GetGlobalFrameCount() / Decoder->GetDecoder().outputSampleRate;
+				const auto totalTime = Timer->GetTotalFrames() / Decoder->GetDecoder().outputSampleRate;
 
 				if (totalTime > 0 && currentTime >= totalTime) {
 					Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_CONTROLLER, "End of track, switching to next...");
@@ -139,7 +139,7 @@ void PlayerController::Play() {
 void PlayerController::Pause() {
     std::lock_guard<std::mutex> lock(audioMutex);
     if (initialized && Player && Device) {
-        Player->StopActions(*Device);
+        Player->Pause(*Device);
         isPlaying = false;
     }
 }
@@ -147,13 +147,16 @@ void PlayerController::Pause() {
 void PlayerController::Stop() {
 	std::lock_guard<std::mutex> lock(audioMutex);
 	if (initialized && Player && Device) {
-		Player->StopActions(*Device);
-		isPlaying = false;
+		Buffer->SetGlobalFrameCount(0);
 		progress = 0.0f;
+		SeekToPosition(0);
+		Player->Pause(*Device);
+		Buffer->ResetBuffer();
+		isPlaying = false;
 	}
 }
 
-void PlayerController::Switch(size_t Index) {
+void PlayerController::Switch(const size_t Index) {
 	std::lock_guard<std::mutex> lock(audioMutex);
 
 	if (!initialized || tracks.empty()) return;
@@ -165,11 +168,9 @@ void PlayerController::Switch(size_t Index) {
 	}
 	Pather->SetIndex(Index+1);
 
-	// 停止当前播放
 	if (isPlaying) {
-		Player->StopActions(*Device);
+		Stop();
 	}
-
 	// 切换到Index
 	Player->Switch(*Pather, *Decoder, *Device, data_callback, *Timer, *Buffer,
 				  SwitchAction::PREV);
@@ -228,7 +229,7 @@ void PlayerController::SeekToPosition(const float progress) {
 
 	// Get the seek information
 	const auto totalFrame = Timer->GetTotalFrames();
-	const auto seekFrame = progress * totalFrame;
+	const auto seekFrame = progress * static_cast<float>(totalFrame);
 
 	// Seek to this position
 	{
@@ -236,7 +237,7 @@ void PlayerController::SeekToPosition(const float progress) {
 
 		if (initialized && Player && Decoder) {
 			// 执行跳转
-			Player->Seek(*Decoder, seekFrame);
+			Player->Seek(*Decoder, static_cast<ma_uint64>(seekFrame));
 		}
 	}
 
@@ -266,12 +267,12 @@ void PlayerController::UpdateProgress() {
 	}
 
 	// 获取当前播放位置
-	double currentTime = Buffer->GetGlobalFrameCount() / Decoder->GetDecoder().outputSampleRate;
-	double totalTime = Timer->GetTotalFrames() / Decoder->GetDecoder().outputSampleRate;
+	const float currentTime = static_cast<float>(Buffer->GetGlobalFrameCount()) / static_cast<float>(Decoder->GetDecoder().outputSampleRate);
+	const float totalTime = static_cast<float>(Timer->GetTotalFrames()) / static_cast<float>(Decoder->GetDecoder().outputSampleRate);
 
 	// 更新进度
 	if (totalTime > 0) {
-		progress.store(static_cast<float>(currentTime / totalTime));
+		progress.store(currentTime / totalTime);
 	} else {
 		progress.store(0.0f);
 	}
@@ -299,4 +300,5 @@ void PlayerController::NotifyTrackChanged() {
     if (stateChangeCallback) {
         stateChangeCallback();
     }
+
 }

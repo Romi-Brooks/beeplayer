@@ -15,7 +15,6 @@
 #include "Buffering.hpp"
 #include "../miniaudio/miniaudio.h"
 #include "../Log/LogSystem.hpp"
-#include "../FileSystem/Path.hpp"
 
 
 void AudioPlayer::Play(AudioDevice &Device, AudioDecoder &Decoder, Status &Timer, AudioBuffering &Buffer) const {
@@ -27,7 +26,7 @@ void AudioPlayer::Play(AudioDevice &Device, AudioDecoder &Decoder, Status &Timer
 
 	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Now Playing: ", this->GetName());
 }
-void AudioPlayer::StopActions(AudioDevice &Device) {
+void AudioPlayer::Pause(AudioDevice &Device) {
 	if (ma_device_is_started(&Device.GetDevice())) {
 		ma_device_stop(&Device.GetDevice());
 	} else {
@@ -80,6 +79,7 @@ void AudioPlayer::Switch(Path &Pather, AudioDecoder &Decoder, AudioDevice &Devic
 	// ZERO: Make sure the data user all cleaned.
 	Clean(Buffer, Timer, Decoder, Device);
 
+
 	// First: Init the Decoder From the file
 	Decoder.InitDecoder(Pather.CurrentFilePath());
 	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_PLAYER, "Reinit Decoder completed.");
@@ -114,3 +114,4 @@ void AudioPlayer::Exit(AudioDevice &Device, AudioDecoder &Decoder) {
 	ma_device_uninit(&Device.GetDevice());
 	ma_decoder_uninit(&Decoder.GetDecoder());
 }
+

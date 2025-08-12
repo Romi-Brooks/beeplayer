@@ -35,7 +35,7 @@ class AudioPlayer {
 		// void InstanceCallback(const ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
 
 		void Play(AudioDevice &Device, AudioDecoder &Decoder, Status& Timer, AudioBuffering& Buffer) const;
-		void StopActions(AudioDevice& Device);
+		void Pause(AudioDevice& Device);
 		void Seek(AudioDecoder& Decoder,ma_uint64 FrameIndex);
 
 		std::string GetName() const { return p_SongName; }

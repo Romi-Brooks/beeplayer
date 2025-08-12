@@ -200,9 +200,6 @@ void UI::RenderMainUI() const {
     ImGui::Text("当前播放: %s", playerController.GetCurrentTrack().c_str());
     ImGui::Separator();
 
-	// 更新进度
-	playerController.UpdateProgress();
-
 	// 获取当前进度
 	float progress = playerController.GetProgress();
 
@@ -273,7 +270,7 @@ void UI::RenderPlaylist() const {
 
     // 获取当前曲目索引
     int currentTrackIndex = static_cast<int>(playerController.GetCurrentTrackIndex());
-    
+
     // 转换为ImGui需要的格式
     const auto& tracks = playerController.GetTracks();
     std::vector<const char*> trackPointers;
@@ -324,7 +321,29 @@ void UI::Run(const std::string &rootPath) {
 
 	// 主循环
 	while (!glfwWindowShouldClose(window)) {
+		auto now = std::chrono::steady_clock::now();
+		std::chrono::duration<double> elapsed = now - lastRenderTime;
+		double frameTime = 1.0 / maxFPS;
+
+		if (elapsed.count() < frameTime) {
+			// 等待下一帧时间
+			std::this_thread::sleep_for(
+				std::chrono::duration<double>(frameTime - elapsed.count())
+			);
+			continue;
+		}
+
+		lastRenderTime = now;
+
 		glfwPollEvents();
+
+		// 检查窗口是否最小化
+		if (glfwGetWindowAttrib(window, GLFW_ICONIFIED)) {
+			// 窗口最小化时跳过渲染
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			continue;
+		}
+
 		RenderMainUI();
 	}
 }

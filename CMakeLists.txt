@@ -25,6 +25,7 @@ file(GLOB_RECURSE IMGUI_SRCS
         "imgui/backends/imgui_impl_glfw.cpp"
         "imgui/backends/imgui_impl_opengl3.cpp"
 )
+
 # 收集源文件
 file(GLOB_RECURSE STB_SRCS
         "GUI/stb_img/stb_image.c"
@@ -51,6 +52,9 @@ add_executable(beeplayer
         FileSystem/Path.hpp
         FileSystem/Encoding.cpp
         FileSystem/Encoding.hpp
+#        FileSystem/Metadata.cpp
+#        FileSystem/Metadata.hpp
+
 #       GUI Provided
         ${IMGUI_SRCS}
         ${STB_SRCS}

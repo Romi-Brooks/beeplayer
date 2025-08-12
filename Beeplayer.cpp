@@ -8,6 +8,7 @@
  *	Thanks to Omar Cornut provided us a lightweight and simple GUI Lib "Dear ImGUI"
  *	And I use GLFW + OpenGL for the backend
  *
+ *	Thanks to JetBrains Provided the free License
  *  Thanks to music make the world so beautiful. :)
  */
 
@@ -16,7 +17,6 @@
 #include <thread>
 #include <string>
 #include <complex>
-
 // Mult-Platform Definition
 #ifdef _WIN32
 #include <windows.h>

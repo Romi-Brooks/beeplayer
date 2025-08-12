@@ -21,7 +21,7 @@
 
 class UI {
 public:
-	UI(PlayerController& controller);
+	explicit UI(PlayerController& controller);
 	~UI();
 
 	// 禁用拷贝
@@ -32,7 +32,6 @@ public:
 	void Run(const std::string& rootPath = "");
 
 private:
-	// 辅助方法
 	void LoadFont();
 	std::string ShowPathSelection();
 	void RenderMainUI() const;
@@ -40,14 +39,16 @@ private:
 	void RenderPlaylist() const;
 	void RenderFrame() const;
 
-	// 成员变量
-	PlayerController& playerController;
+
 	GLFWwindow* window = nullptr;
 	ImGuiIO* io = nullptr;
 	ImFont* font = nullptr;
+	PlayerController& playerController;
 
-	// 用于回调的状态标记
 	mutable bool trackChanged = false;
+
+	std::chrono::steady_clock::time_point lastRenderTime;
+	const float maxFPS = 60.0f; // 最大帧率
 };
 
 #endif // UI_HPP
