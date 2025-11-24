@@ -3,8 +3,10 @@
 *<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
 <h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++.</h3>  
+
 [//]: # (Beeplayer GUI Image)
-![Beeplayer-GUI](/Resource/image/Beeplayer_GUI.png "Beeplayer GUI")
+![Beeplayer-GUI](https://github.com/Romi-Brooks/beeplayer/blob/beeplayer-imgui/Resource/image/Beeplayer_GUI.png "Beeplayer GUI")  
+
 - [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
 - [x] 修复wav/mp3文件相互切换会有高频噪声的bug
