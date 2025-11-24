@@ -3,6 +3,7 @@
 *<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
 <h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++.</h3>  
+[Imgui](https://github.com/Romi-Brooks/beeplayer/blob/beeplayer-imgui/Resource/image/Beeplayer_GUI.png)
 
 - [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
