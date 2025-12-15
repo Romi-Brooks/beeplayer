@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="ico">icon/Logo.png</file>
+    </qresource>
+    <qresource prefix="/player">
+        <file alias="cd">player/cd.png</file>
+        <file alias="background">player/Background.jpg</file>
+    </qresource>
+    <qresource prefix="/controller">
+        <file alias="exploerer">controller/folder.png</file>
+        <file alias="play">controller/play.png</file>
+        <file alias="stop">controller/stop.png</file>
+        <file alias="next">controller/next.png</file>
+        <file alias="prev">controller/prev.png</file>
+        <file alias="pause">controller/pause.png</file>
+    </qresource>
+    <qresource prefix="/style">
+        <file alias="style">style/style.css</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file alias="msyh_2">font/msyh.ttf</file>
+        <file alias="msyh">font/msyh_2.ttf</file>
+    </qresource>
+</RCC>

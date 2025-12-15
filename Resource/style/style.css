@@ -1,0 +1,286 @@
+    /* 基础设置 - 优化字体和全局圆角 */
+* {
+    border-radius: 8px; /* 全局圆角 */
+    outline: none; /* 移除列表视图的焦点框 */
+}
+
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                stop:0 #1a1a2e, stop:1 #16213e);
+    color: #ffffff;
+    border: none;
+}
+
+/* 主内容区域 - 添加圆角和玻璃态效果 */
+QWidget#BeeplayerUI {
+    background: rgba(25, 25, 45, 0.85); /* 增加不透明度 */
+    border-radius: 20px; /* 更大的圆角 */
+    margin: 10px; /* 减小边距 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0; /* 确保内边距为0 */
+}
+
+/* 播放列表 - 现代化圆角设计 */
+QListView {
+    background: rgba(30, 30, 50, 0.7); /* 增加不透明度 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px; /* 增加圆角 */
+    padding: 8px; /* 减小内边距 */
+    font-size: 13px;
+    color: #e0e0ff;
+    margin: 5px 0; /* 添加外边距避免重叠 */
+    outline: none; /* 移除列表视图的焦点框 */
+}
+
+QListView::item {
+    padding: 10px 12px; /* 减小内边距 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px; /* 减小圆角 */
+    margin: 3px 0; /* 减小间距 */
+    background: transparent;
+}
+
+QListView::item:hover {
+    background: rgba(60, 60, 90, 0.4);
+}
+
+QListView::item:focus {
+    outline: none; /* 移除焦点时的外框 */
+    border: none; /* 确保没有边框 */
+}
+
+QListView::item:selected {
+    background: rgba(92, 107, 192, 0.25);
+    color: #ffffff;
+    border-radius: 8px; /* 减小圆角 */
+    border: none;
+    font-weight: 500;
+    outline: none; /* 移除选中项的外框 */
+    border: none; /* 确保没有边框 */
+    background: rgba(92, 107, 192, 0.25);
+    color: #ffffff;
+    border-radius: 10px;
+}
+
+QListView::item:selected:focus {
+    outline: none; /* 双重确保移除焦点框 */
+    border: none; /* 确保没有边框 */
+}
+/* 专辑封面 - 圆形设计，减小尺寸 */
+RotatingAlbumArt#SongAvator {
+    background-color: transparent;
+    border-radius: 50%;
+    min-width: 180px; /* 减小尺寸 */
+    min-height: 180px; /* 减小尺寸 */
+    max-width: 220px; /* 减小尺寸 */
+    max-height: 220px; /* 减小尺寸 */
+    margin: 0 auto;
+    qproperty-alignment: AlignCenter;
+}
+
+/* 歌曲标题样式 */
+#SongTitle {
+    font-size: 22px; /* 稍小字体 */
+    font-weight: 600;
+    color: #ffffff;
+    qproperty-alignment: 'AlignCenter';
+    letter-spacing: 0.5px;
+    margin-top: 10px; /* 减小上边距 */
+    background: transparent; /* 确保背景透明 */
+    padding: 0 10px; /* 添加内边距避免文本溢出 */
+}
+
+/* 制作人样式 */
+#SongProducer {
+    font-size: 16px; /* 稍小字体 */
+    color: rgba(255, 255, 255, 0.75);
+    qproperty-alignment: 'AlignCenter';
+    margin-bottom: 15px; /* 减小下边距 */
+    font-weight: 400;
+    background: transparent; /* 确保背景透明 */
+    padding: 0 10px; /* 添加内边距避免文本溢出 */
+}
+
+/* 进度条 - 霓虹效果（增加高度和圆角） */
+QProgressBar {
+    height: 6px; /* 稍细的进度条 */
+    border-radius: 3px; /* 稍小的圆角 */
+    background: rgba(100, 100, 130, 0.3);
+    margin: 12px 0 6px 0; /* 调整间距 */
+    border: none;
+}
+
+QProgressBar::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                stop:0 #7b68ee, stop:1 #3498db);
+    border-radius: 3px; /* 稍小的圆角 */
+    border: none;
+}
+
+/* 控制按钮 - 更现代化的圆角设计 */
+QPushButton {
+    min-width: 45px; /* 稍小尺寸 */
+    min-height: 45px;
+    border-radius: 22.5px; /* 完美的圆形 */
+    background: rgba(60, 60, 90, 0.5); /* 更深的背景 */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* 更明显的边框 */
+    font-size: 14px;
+    color: #ffffff;
+    margin: 3px; /* 添加外边距避免重叠 */
+}
+
+QPushButton:hover {
+    background: rgba(92, 107, 192, 0.5); /* 更深的悬停效果 */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+QPushButton:pressed {
+    background: rgba(70, 80, 150, 0.7); /* 更深的按压效果 */
+}
+
+/* 播放控制按钮特殊样式 */
+QPushButton#PlayControlBtn {
+    min-width: 55px; /* 稍小尺寸 */
+    min-height: 55px;
+    background: rgba(123, 104, 238, 0.4); /* 更深的背景 */
+    border: 1px solid rgba(123, 104, 238, 0.6); /* 更明显的边框 */
+    border-radius: 27.5px; /* 完美的圆形 */
+    margin: 5px; /* 增加外边距 */
+}
+
+QPushButton#PlayControlBtn:hover {
+    background: rgba(123, 104, 238, 0.6); /* 更深的悬停效果 */
+}
+
+/* 音量滑块 - 玻璃态（增加高度和圆角） */
+#volumeSlider::groove:horizontal {
+    height: 5px; /* 稍细的轨道 */
+    background: rgba(100, 100, 130, 0.3);
+    border-radius: 3px;
+}
+
+#volumeSlider::handle:horizontal {
+    width: 18px; /* 稍小的滑块 */
+    height: 18px;
+    margin: -6px 0; /* 调整位置 */
+    border-radius: 8px;
+    background: #ffffff;
+    border: 2px solid #7b68ee;
+}
+
+#volumeSlider::add-page:horizontal {
+    background: rgba(100, 100, 130, 0.3);
+}
+
+#volumeSlider::sub-page:horizontal {
+background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+            stop:0 #7b68ee, stop:1 #3498db);
+border-radius: 3px;
+}
+
+/* 路径输入框 - 玻璃态（增加圆角和内边距） */
+QLineEdit {
+    background: rgba(40, 40, 60, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* 更明显的边框 */
+    border-radius: 8px; /* 稍小的圆角 */
+    padding: 8px 12px; /* 减小内边距 */
+    color: #ffffff;
+    font-size: 13px; /* 稍小字体 */
+    selection-background-color: #7b68ee;
+    margin: 5px 0; /* 添加外边距 */
+}
+
+QLineEdit:hover {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+QLineEdit:focus {
+    border: 1px solid #7b68ee;
+}
+
+/* 状态栏 - 半透明（增加圆角） */
+QStatusBar {
+    background: rgba(25, 25, 45, 0.8); /* 增加不透明度 */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7); /* 更高对比度 */
+    font-size: 11px; /* 稍小字体 */
+    padding: 6px 10px; /* 减小内边距 */
+    border-top-left-radius: 0; /* 顶部不圆角 */
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 15px; /* 稍小的圆角 */
+    border-bottom-right-radius: 15px;
+    margin-top: 5px; /* 添加上边距 */
+}
+
+/* 时间标签 - 增加字体大小 */
+QLabel#currentTime, QLabel#totalTime {
+    color: rgba(255, 255, 255, 0.8); /* 更高对比度 */
+    font-size: 12px; /* 稍小字体 */
+    margin: 0 5px; /* 添加外边距 */
+}
+
+/* 悬停提示 - 增加圆角和内边距 */
+QToolTip {
+    background-color: #2d2d4d;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px; /* 稍小的圆角 */
+    padding: 6px 10px; /* 减小内边距 */
+    font-size: 12px;
+    opacity: 0.95;
+}
+
+/* 新增：容器控件样式 */
+QWidget#avatorContainer {
+    background: transparent;
+    border: none;
+    margin: 0; /* 确保无外边距 */
+    padding: 0; /* 确保无内边距 */
+}
+
+/* 新增：布局弹簧样式 */
+QSpacerItem {
+    background: transparent;
+}
+
+/* 新增：菜单栏样式 */
+QMenuBar {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3px; /* 减小内边距 */
+    margin-bottom: 5px; /* 添加下边距 */
+}
+
+QMenuBar::item {
+    padding: 3px 8px; /* 减小内边距 */
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: rgba(92, 107, 192, 0.3);
+}
+
+/* 新增：文件加载图标样式 */
+QProgressIndicator {
+    qproperty-color: #7b68ee; /* 图标颜色 */
+    qproperty-animationDelay: 80; /* 动画速度 */
+    qproperty-pieSize: 0.6; /* 减小图标大小 */
+    qproperty-innerRadius: 0.4; /* 减小内半径 */
+    qproperty-outerRadius: 0.8; /* 减小外半径 */
+}
+
+/* 新增：通用容器样式 */
+.container {
+    background: transparent;
+    border: none;
+    margin: 5px; /* 添加外边距 */
+    padding: 0; /* 确保无内边距 */
+}
+
+/* 新增：布局间隔样式 */
+.spacer {
+    background: transparent;
+    min-width: 5px;
+    min-height: 5px;
+}

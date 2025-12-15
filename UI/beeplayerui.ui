@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BeeplayerUI</class>
+ <widget class="QMainWindow" name="BeeplayerUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1050</width>
+    <height>635</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BeePlayer</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="MainUI">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="HeaderPanel" native="true">
+      <layout class="QHBoxLayout" name="headerLayout">
+       <item>
+        <widget class="QPushButton" name="SelectorBrowse">
+         <property name="toolTip">
+          <string>Browse music folder</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../Resource/Resource.qrc">
+           <normaloff>:/controller/exploerer</normaloff>:/controller/exploerer</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="SelectorPathLine">
+         <property name="placeholderText">
+          <string>Music folder path...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="SelectorSubmit">
+         <property name="text">
+          <string>Load</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="mainContentLayout">
+      <item>
+       <widget class="QListView" name="SongList">
+        <property name="editTriggers">
+         <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="playerLayout">
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>15</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="avatorContainerLayout">
+          <item alignment="Qt::AlignmentFlag::AlignHCenter">
+           <widget class="RotatingAlbumArt" name="SongAvator" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>250</width>
+              <height>250</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>300</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="SongTitle">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Song Title</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="ScrollLabel" name="SongProducer">
+          <property name="text">
+           <string>Artist Name</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="controlLayout">
+          <item>
+           <widget class="QPushButton" name="PlayPrevBtn">
+            <property name="toolTip">
+             <string>Previous</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../Resource/Resource.qrc">
+              <normaloff>:/controller/prev</normaloff>:/controller/prev</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="PlayControlBtn">
+            <property name="toolTip">
+             <string>Play/Pause</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../Resource/Resource.qrc">
+              <normaloff>:/controller/play</normaloff>:/controller/play</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="PlayStopBtn">
+            <property name="toolTip">
+             <string>Stop</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../Resource/Resource.qrc">
+              <normaloff>:/controller/stop</normaloff>:/controller/stop</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="PlayNextBtn">
+            <property name="toolTip">
+             <string>Next</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../Resource/Resource.qrc">
+              <normaloff>:/controller/next</normaloff>:/controller/next</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="volumeLayout">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="pixmap">
+             <pixmap>:/icons/volume.svg</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1050</width>
+     <height>17</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="styleSheet">
+    <string notr="true">background-color: #f0f0f0;</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>RotatingAlbumArt</class>
+   <extends>QWidget</extends>
+   <header>../UI/Animations/rotatingalbumart.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ScrollLabel</class>
+   <extends>QLabel</extends>
+   <header>../UI/Animations/scrolllabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../Resource/Resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
