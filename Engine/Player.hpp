@@ -9,11 +9,12 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+
 // Basic Lib
-#include "Status.hpp"
 #include "Decoder.hpp"
 #include "Device.hpp"
-
+#include "Status.hpp"
+#include "Buffering.hpp"
 #include "../FileSystem/Path.hpp"
 
 // The Player class is a lightweight wrapper that encapsulates the public interfaces of the
@@ -34,7 +35,9 @@ class AudioPlayer {
 		// static void StaticCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
 		// void InstanceCallback(const ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
 
-		void Play(AudioDevice& Device, AudioDecoder& Decoder) const;
+		void Play(AudioDevice &Device, AudioDecoder &Decoder, Status& Timer, AudioBuffering& Buffer) const;
+		void Pause(AudioDevice& Device);
+		void Seek(AudioDecoder& Decoder,ma_uint64 FrameIndex);
 
 		std::string GetName() const { return p_SongName; }
 		float GetVol() const { return p_volume; }
@@ -45,8 +48,9 @@ class AudioPlayer {
 		void InitDevice(AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, AudioBuffering &Buffer);
 		void Switch(Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback, Status& Timer, AudioBuffering& Buffer, SwitchAction SwitchCode);
 
-		// This Function is using for switch the song, when the file is play done.
-		void NextFileCheck(AudioBuffering& Buffer, Status& Timer, Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback);
+		// This Function is using for switch the song, when the file is play done, or user switch manually
+		// void NextFileCheck(AudioBuffering& Buffer, Status& Timer, Path& Pather, AudioDecoder& Decoder, AudioDevice& Device, const ma_device_data_proc &Callback);
+
 		void Clean(AudioBuffering& Buffer, Status& Timer, AudioDecoder& Decoder, AudioDevice& Device);
 		void Exit(AudioDevice &Device, AudioDecoder &Decoder);
 

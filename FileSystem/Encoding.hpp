@@ -33,11 +33,11 @@
 #include <string>
 
 class Encoding {
-    public:
+public:
 
-    static bool IsPureAscii(const std::string& FileName);
+	static bool IsPureAscii(const std::string& FileName);
 
-    static std::wstring u8tou16(const std::string& u8);
+	static std::wstring u8tou16(const std::string& u8);
 };
 
 

@@ -44,7 +44,7 @@ void Path::InitSongList() {
 }
 
 Path::Path(const std::string &root) : p_root_path(root) {
-	LOG_INFO("Pather -> Set Root Path: " + root);
+	Log::LogOut(LogLevel::BP_INFO, LogChannel::CH_LOG, "Set Root Path: " + root);
 	InitSongList();
 }
 
