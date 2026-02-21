@@ -2,7 +2,7 @@
 
 *<h5 align="right">Thanks to music that makes the world so beautiful. : )</h5>*
 
-<h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++, with the qt GUI.</h3>  
+<h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++, with the Qt GUI.</h3>  
 
 [//]: # (Beeplayer-Qt GUI Image)
 ![Beeplayer-GUI](Beeplayer-Qt.png "Beeplayer-Qt GUI")  
