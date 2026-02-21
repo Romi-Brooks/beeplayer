@@ -4,9 +4,8 @@
 
 <h3 align="center">A lightweight and cross-platform music player based on miniaudio and C++, with the qt GUI.</h3>  
 
-[//]: # (Beeplayer GUI Image)
-![Beeplayer-GUI](<img width="2559" height="1599" alt="image" src="https://github.com/user-attachments/assets/f7b3ece0-64b7-4927-b8a6-2acb1126f128" />
- "Beeplayer-Qt GUI")  
+[//]: # (Beeplayer-Qt GUI Image)
+![Beeplayer-GUI](Beeplayer-Qt.png "Beeplayer-Qt GUI")  
 
 - [x] 用户目录接收
 - [x] 自动下一首, (不过依旧有一些潜在问题 TuT)
